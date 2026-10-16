@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NGO Organizer Portal — HopeConnect AI</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+  <!-- Site Header -->
+  <header class="site-header">
+    <div class="container nav-container">
+      <a href="index.html" class="brand-logo">
+        <div class="logo-icon"><i class="fas fa-hand-holding-heart"></i></div>
+        <span>HopeConnect<span class="ai-badge">AI</span></span>
+      </a>
+
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="ngos.html">Discover NGOs</a></li>
+        <li><a href="volunteer.html">Volunteer</a></li>
+        <li><a href="campaigns.html">Campaigns</a></li>
+        <li><a href="impact.html">Impact</a></li>
+        <li><a href="dashboard.html" class="active">Organizer Portal</a></li>
+      </ul>
+
+      <div class="nav-actions">
+        <select class="role-switcher-select" id="roleSwitcherSelect" title="Switch User Role View">
+          <option value="volunteer">🙋 Volunteer View</option>
+          <option value="donor">❤️ Donor View</option>
+          <option value="ngo" selected>🏢 NGO Organizer</option>
+        </select>
+        <button class="mobile-menu-btn" aria-label="Toggle menu"><i class="fas fa-bars"></i></button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Organizer Portal Main Layout -->
+  <div class="portal-layout" id="organizerDashboard">
+    
+    <!-- Sidebar -->
+    <aside class="portal-sidebar">
+      <div class="portal-org-summary">
+        <div class="portal-org-avatar" id="orgSidebarAvatar"><i class="fas fa-leaf" style="color: #FFFFFF;"></i></div>
+        <div>
+          <strong style="font-size: 0.95rem; display: block;" id="orgSidebarName">Green Earth Foundation</strong>
+          <span style="font-size: 0.78rem; color: var(--text-muted);" id="orgSidebarLocation"><i class="fas fa-map-marker-alt"></i> Pune, India</span>
+        </div>
+      </div>
+
+      <ul class="portal-menu">
+        <li class="portal-menu-item"><a href="#overview" class="active" onclick="switchPortalTab('overview', event)"><i class="fas fa-th-large"></i> Overview</a></li>
+        <li class="portal-menu-item"><a href="#campaigns" onclick="switchPortalTab('campaigns', event)"><i class="fas fa-bullhorn"></i> My Campaigns</a></li>
+        <li class="portal-menu-item"><a href="#volunteers" onclick="switchPortalTab('volunteers', event)"><i class="fas fa-users"></i> Volunteers</a></li>
+        <li class="portal-menu-item"><a href="#donations" onclick="switchPortalTab('donations', event)"><i class="fas fa-hand-holding-usd"></i> Donations Log</a></li>
+        <li class="portal-menu-item"><a href="#events" onclick="switchPortalTab('events', event)"><i class="fas fa-calendar-alt"></i> Volunteer Drives</a></li>
+        <li class="portal-menu-item"><a href="#analytics" onclick="switchPortalTab('analytics', event)"><i class="fas fa-chart-line"></i> Impact Analytics</a></li>
+        <li class="portal-menu-item"><a href="#settings" onclick="switchPortalTab('settings', event)"><i class="fas fa-cog"></i> NGO Settings</a></li>
+      </ul>
+
+      <div style="margin-top: auto; padding-top: 1rem; border-top: 1px solid var(--border-light);">
+        <a href="index.html" class="btn btn-sm btn-outline" style="width: 100%;">
+          <i class="fas fa-arrow-left"></i> Public Portal
+        </a>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="portal-content-area">
+      
+      <!-- Top Bar -->
+      <div class="portal-top-bar">
+        <div>
+          <h2 id="portalSectionTitle">Organizer Overview</h2>
+          <p id="portalSectionSubtitle">Manage your verified social campaigns, review volunteer applicants, and track donation milestones in real time.</p>
+        </div>
+        <div style="display: flex; gap: 0.75rem;">
+          <button class="btn btn-secondary btn-sm" onclick="openModal('createDriveModal')">
+            <i class="fas fa-calendar-plus"></i> Host Volunteer Drive
+          </button>
+          <button class="btn btn-primary btn-sm" onclick="openModal('createCampaignModal')">
+            <i class="fas fa-plus"></i> New Campaign
+          </button>
+        </div>
+      </div>
+
+      <!-- SECTION 1: OVERVIEW -->
+      <div class="portal-section" id="section-overview">
+        <!-- Quick Metrics Grid -->
+        <div class="stats-overview-grid">
+          <div class="stat-metric-card">
+            <div class="stat-icon-square" style="background: var(--accent-gold-light); color: #B38600;">
+              <i class="fas fa-bullhorn"></i>
+            </div>
+            <div>
+              <div class="stat-number" id="orgActiveCampaigns">5</div>
+              <div class="stat-label">Active Campaigns</div>
+            </div>
+          </div>
+
+          <div class="stat-metric-card">
+            <div class="stat-icon-square" style="background: var(--accent-blue-light); color: var(--accent-blue);">
+              <i class="fas fa-users"></i>
+            </div>
+            <div>
+              <div class="stat-number" id="orgRegisteredVolunteers">245</div>
+              <div class="stat-label">Registered Volunteers</div>
+            </div>
+          </div>
+
+          <div class="stat-metric-card">
+            <div class="stat-icon-square" style="background: var(--accent-green-light); color: var(--accent-green);">
+              <i class="fas fa-hand-holding-usd"></i>
+            </div>
+            <div>
+              <div class="stat-number" id="orgFundsRaised">₹3,50,000</div>
+              <div class="stat-label">Total Funds Raised</div>
+            </div>
+          </div>
+
+          <div class="stat-metric-card">
+            <div class="stat-icon-square" style="background: var(--accent-orange-light); color: var(--accent-orange);">
+              <i class="fas fa-calendar-check"></i>
+            </div>
+            <div>
+              <div class="stat-number" id="orgDrivesCount">6</div>
+              <div class="stat-label">Volunteer Drives</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Summary Cards -->
+        <div style="display: grid; grid-template-columns: 1.4fr 1fr; gap: 1.5rem; margin-top: 1.5rem;">
+          <div class="data-table-container">
+            <div class="data-table-header">
+              <h3><i class="fas fa-bullhorn" style="color: var(--accent-orange);"></i> Top Campaigns Summary</h3>
+              <a href="#campaigns" class="btn btn-sm btn-outline" onclick="switchPortalTab('campaigns', event)">View All</a>
+            </div>
+            <table class="custom-table">
+              <thead>
+                <tr>
+                  <th>Campaign Title</th>
+                  <th>Progress</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="orgOverviewCampaignsBody">
+                <!-- Rendered dynamically -->
+              </tbody>
+            </table>
+          </div>
+
+          <div class="data-table-container">
+            <div class="data-table-header">
+              <h3><i class="fas fa-user-clock" style="color: var(--accent-blue);"></i> Pending Applications</h3>
+              <a href="#volunteers" class="btn btn-sm btn-outline" onclick="switchPortalTab('volunteers', event)">Manage</a>
+            </div>
+            <ul id="orgOverviewVolunteersList" style="list-style: none; display: flex; flex-direction: column; gap: 0.85rem; padding: 0.5rem 0;">
+              <!-- Rendered dynamically -->
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 2: CAMPAIGNS -->
+      <div class="portal-section hidden" id="section-campaigns">
+        <div class="data-table-container">
+          <div class="data-table-header">
+            <h3><i class="fas fa-bullhorn" style="color: var(--accent-orange);"></i> Managed Campaigns & Progress</h3>
+            <button class="btn btn-sm btn-primary" onclick="openModal('createCampaignModal')">
+              <i class="fas fa-plus"></i> Create New Campaign
+            </button>
+          </div>
+          <table class="custom-table">
+            <thead>
+              <tr>
+                <th>Campaign Details</th>
+                <th>Funds Raised / Goal</th>
+                <th>Progress Bar</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="orgCampaignsTableBody">
+              <!-- Rendered by dashboard.js -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- SECTION 3: VOLUNTEERS -->
+      <div class="portal-section hidden" id="section-volunteers">
+        <div class="data-table-container">
+          <div class="data-table-header">
+            <div>
+              <h3><i class="fas fa-users" style="color: var(--accent-blue);"></i> Volunteer Applicants & Rosters</h3>
+              <span style="font-size: 0.85rem; color: var(--text-muted);">Review and confirm volunteer applications in real time</span>
+            </div>
+          </div>
+          <table class="custom-table">
+            <thead>
+              <tr>
+                <th>Volunteer Applicant</th>
+                <th>Assigned Opportunity</th>
+                <th>Skills & Availability</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="orgVolunteersTableBody">
+              <!-- Rendered by dashboard.js -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- SECTION 4: DONATIONS LOG -->
+      <div class="portal-section hidden" id="section-donations">
+        <div class="data-table-container">
+          <div class="data-table-header">
+            <div>
+              <h3><i class="fas fa-hand-holding-usd" style="color: var(--accent-green);"></i> Incoming Donations & Audit Log</h3>
+              <span style="font-size: 0.85rem; color: var(--text-muted);">100% verified grassroots donor transactions</span>
+            </div>
+            <button class="btn btn-sm btn-outline" onclick="window.exportDonationsCSV()">
+              <i class="fas fa-file-csv"></i> Export Donations (CSV)
+            </button>
+          </div>
+          <table class="custom-table">
+            <thead>
+              <tr>
+                <th>Transaction ID</th>
+                <th>Donor Name</th>
+                <th>Campaign Supported</th>
+                <th>Date</th>
+                <th>Amount</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="orgDonationsTableBody">
+              <!-- Rendered by dashboard.js -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- SECTION 5: VOLUNTEER DRIVES / EVENTS -->
+      <div class="portal-section hidden" id="section-events">
+        <div class="data-table-container">
+          <div class="data-table-header">
+            <div>
+              <h3><i class="fas fa-calendar-alt" style="color: var(--accent-gold-hover);"></i> Volunteer Drives & Field Events</h3>
+              <span style="font-size: 0.85rem; color: var(--text-muted);">Manage upcoming on-ground and digital drives</span>
+            </div>
+            <button class="btn btn-sm btn-primary" onclick="openModal('createDriveModal')">
+              <i class="fas fa-plus"></i> Host Volunteer Drive
+            </button>
+          </div>
+          <table class="custom-table">
+            <thead>
+              <tr>
+                <th>Drive Name & Cause</th>
+                <th>Location</th>
+                <th>Event Date</th>
+                <th>Spots Filled</th>
+                <th>Skill Requirement</th>
+              </tr>
+            </thead>
+            <tbody id="orgEventsTableBody">
+              <!-- Rendered by dashboard.js -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- SECTION 6: ANALYTICS -->
+      <div class="portal-section hidden" id="section-analytics">
+        <div class="dashboard-charts-grid">
+          <div class="chart-card">
+            <div class="chart-header">
+              <h3><i class="fas fa-chart-line" style="color: var(--accent-gold-hover);"></i> Monthly Inflow & Volunteering Engagement</h3>
+              <span style="font-size: 0.85rem; color: var(--text-muted);">FY 2026</span>
+            </div>
+            <canvas id="orgTrendChart" height="130"></canvas>
+          </div>
+
+          <div class="chart-card">
+            <div class="chart-header">
+              <h3><i class="fas fa-chart-pie" style="color: var(--accent-green);"></i> Cause Distribution</h3>
+            </div>
+            <canvas id="orgCategoryChart" height="180"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 7: SETTINGS -->
+      <div class="portal-section hidden" id="section-settings">
+        <div class="calc-card" style="padding: 2.5rem; max-width: 800px;">
+          <h3 style="margin-bottom: 0.5rem;"><i class="fas fa-cog" style="color: var(--accent-gold);"></i> Organization Profile & Public Visibility</h3>
+          <p style="font-size: 0.9rem; margin-bottom: 2rem;">Information shown on your public NGO profile and campaign pages.</p>
+
+          <form id="orgSettingsForm">
+            <div class="form-group">
+              <label>Organization Legal Name *</label>
+              <input type="text" class="form-control" id="settingsOrgName" value="Green Earth Foundation" required>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem;">
+              <div class="form-group">
+                <label>Primary Focus Category *</label>
+                <select class="form-control" id="settingsOrgCategory">
+                  <option value="Environment" selected>Environment</option>
+                  <option value="Education">Education</option>
+                  <option value="Healthcare">Healthcare</option>
+                  <option value="Animal Welfare">Animal Welfare</option>
+                  <option value="Women Empowerment">Women Empowerment</option>
+                  <option value="Child Welfare">Child Welfare</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Location (City/State) *</label>
+                <input type="text" class="form-control" id="settingsOrgLocation" value="Pune, Maharashtra" required>
+              </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem;">
+              <div class="form-group">
+                <label>Official Website</label>
+                <input type="url" class="form-control" id="settingsOrgWebsite" value="https://greenearth.example.org">
+              </div>
+              <div class="form-group">
+                <label>Contact Phone</label>
+                <input type="tel" class="form-control" id="settingsOrgPhone" value="+91 99887 76655">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Organization Mission & Summary *</label>
+              <textarea class="form-control" id="settingsOrgDesc" rows="4" required>Dedicated to urban afforestation, organic farming advocacy, and community waste segregation across Western India.</textarea>
+            </div>
+
+            <button type="submit" class="btn btn-green">
+              <i class="fas fa-save"></i> Save Profile Settings
+            </button>
+          </form>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- Create Campaign Modal -->
+  <div class="modal-backdrop" id="createCampaignModal">
+    <div class="modal-card" style="max-width: 620px;">
+      <div class="modal-header">
+        <h3><i class="fas fa-bullhorn" style="color: var(--accent-orange);"></i> Create New Social Campaign</h3>
+        <button class="modal-close-btn" onclick="closeModal('createCampaignModal')">&times;</button>
+      </div>
+      <form id="createCampaignForm">
+        <div class="modal-body">
+          <div class="form-group">
+            <label>Campaign Title *</label>
+            <input type="text" class="form-control" id="newCampTitle" placeholder="e.g. Rural Solar Light Installation in 5 Villages" required>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+              <label>Category *</label>
+              <select class="form-control" id="newCampCategory" required>
+                <option value="Environment">Environment</option>
+                <option value="Education">Education</option>
+                <option value="Healthcare">Healthcare</option>
+                <option value="Animal Welfare">Animal Welfare</option>
+                <option value="Women Empowerment">Women Empowerment</option>
+                <option value="Child Welfare">Child Welfare</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Fundraising Goal (₹) *</label>
+              <input type="number" class="form-control" id="newCampGoal" placeholder="75000" min="1000" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Location / City *</label>
+            <input type="text" class="form-control" id="newCampLocation" placeholder="e.g. Pune & Satara District" required>
+          </div>
+
+          <div class="form-group">
+            <label>Campaign Cover Image URL (Optional)</label>
+            <input type="url" class="form-control" id="newCampImage" placeholder="https://images.unsplash.com/photo-...">
+          </div>
+
+          <div class="form-group">
+            <label>Detailed Description *</label>
+            <textarea class="form-control" id="newCampDescription" placeholder="Explain the community challenge, beneficiaries, and milestones..." rows="3" required></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('createCampaignModal')">Cancel</button>
+          <button type="submit" class="btn btn-primary"><i class="fas fa-check"></i> Publish Campaign</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Host Volunteer Drive Modal -->
+  <div class="modal-backdrop" id="createDriveModal">
+    <div class="modal-card" style="max-width: 620px;">
+      <div class="modal-header">
+        <h3><i class="fas fa-calendar-plus" style="color: var(--accent-gold-hover);"></i> Host New Volunteer Drive</h3>
+        <button class="modal-close-btn" onclick="closeModal('createDriveModal')">&times;</button>
+      </div>
+      <form id="createDriveForm">
+        <div class="modal-body">
+          <div class="form-group">
+            <label>Drive Title *</label>
+            <input type="text" class="form-control" id="newDriveTitle" placeholder="e.g. Weekend Riverbank Cleanup & Segregation" required>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+              <label>Category *</label>
+              <select class="form-control" id="newDriveCategory" required>
+                <option value="Environment">Environment</option>
+                <option value="Education">Education</option>
+                <option value="Healthcare">Healthcare</option>
+                <option value="Animal Welfare">Animal Welfare</option>
+                <option value="Child Welfare">Child Welfare</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Volunteers Needed *</label>
+              <input type="number" class="form-control" id="newDriveVolunteersNeeded" value="25" min="1" required>
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+              <label>Location / Venue *</label>
+              <input type="text" class="form-control" id="newDriveLocation" placeholder="e.g. Pune (Mutha Riverbank)" required>
+            </div>
+            <div class="form-group">
+              <label>Date & Time *</label>
+              <input type="text" class="form-control" id="newDriveDate" placeholder="e.g. 24 October 2026 (Sunday)" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Skill Level / Requirements</label>
+            <input type="text" class="form-control" id="newDriveSkill" placeholder="Open for all / Physical stamina / Beginners welcome" value="Beginner / Open for all">
+          </div>
+
+          <div class="form-group">
+            <label>Drive Description & Plan *</label>
+            <textarea class="form-control" id="newDriveDesc" rows="3" placeholder="Provide event schedule, meeting point, and safety gear provided..." required></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('createDriveModal')">Cancel</button>
+          <button type="submit" class="btn btn-green"><i class="fas fa-check-circle"></i> Publish Drive to Public</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/store.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/dashboard.js"></script>
+</body>
+</html>
