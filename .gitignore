@@ -1,0 +1,17 @@
+node_modules
+.env
+dev.db
+dev.db-journal
+prisma/*.db
+prisma/*.db-journal
+database.sqlite
+backups/
+*.log
+chrome_dump.html
+audit_inventory_raw.json
+scratch_cdp.js
+run_full_audit.js
+dist
+coverage
+.DS_Store
+

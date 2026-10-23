@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>403 — Access Restricted | ImpactHub</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body style="display: flex; flex-direction: column; min-height: 100vh; background: var(--bg-secondary);">
+  <header class="site-header">
+    <div class="container nav-container">
+      <a href="/" class="brand-logo" style="text-decoration: none;">
+        <div class="brand-logo-svg"><svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></div>
+        <div class="brand-text-wrap" style="margin-left: 0.6rem;">Impact<span class="hub-accent">Hub</span></div>
+      </a>
+      <ul class="nav-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/dashboard">My Dashboard</a></li>
+      </ul>
+      <div class="nav-actions">
+        <a href="/" class="btn btn-sm btn-outline">Return to Home</a>
+      </div>
+    </div>
+  </header>
+
+  <main style="flex: 1; display: flex; align-items: center; justify-content: center; padding: 4rem 1.5rem;">
+    <div style="max-width: 580px; width: 100%; text-align: center; background: #FFFFFF; border: 1px solid var(--border-light); border-radius: var(--radius-xl); padding: 3rem 2rem; box-shadow: var(--shadow-md);">
+      <div style="width: 80px; height: 80px; border-radius: 50%; background: #FEE2E2; color: #DC2626; display: flex; align-items: center; justify-content: center; font-size: 2.2rem; margin: 0 auto 1.5rem auto;">
+        <i class="fas fa-shield-alt"></i>
+      </div>
+      <span style="font-size: 3rem; font-weight: 800; color: #DC2626; line-height: 1; display: block; margin-bottom: 0.5rem; font-family: 'Plus Jakarta Sans', sans-serif;">
+        403
+      </span>
+      <h1 style="font-size: 1.6rem; color: var(--text-primary); margin-bottom: 0.75rem;">Access Restricted</h1>
+      <p style="color: var(--text-secondary); font-size: 1rem; line-height: 1.6; margin-bottom: 2rem;">
+        You don't have permission to access this area. ImpactHub enforces strict role isolation — volunteers, donors, NGOs, and administrators can only access features dedicated to their registered role.
+      </p>
+      <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+        <a href="/dashboard" class="btn btn-primary" style="padding: 0.75rem 1.5rem;"><i class="fas fa-th-large"></i> Go to My Role Dashboard</a>
+        <a href="/" class="btn btn-outline" style="padding: 0.75rem 1.5rem;">Return Home</a>
+      </div>
+    </div>
+  </main>
+</body>
+</html>

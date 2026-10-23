@@ -1,0 +1,37 @@
+{
+  "name": "impacthub",
+  "version": "1.0.0",
+  "description": "ImpactHub - Production Social Impact & Volunteering Platform",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "seed": "node prisma/seed.js",
+    "migrate": "npx prisma migrate deploy",
+    "migrate:dev": "npx prisma migrate dev",
+    "admin:create": "node scripts/admin_create.js",
+    "admin:reset-password": "node scripts/admin_reset_password.js",
+    "admin:unlock": "node scripts/admin_unlock.js",
+    "doctor": "node scripts/doctor.js",
+    "db:backup": "node scripts/db_backup.js",
+    "test": "node tests/test_production_readiness.js",
+    "test:e2e": "node tests/test_e2e.js",
+    "test:platform": "node tests/test_platform.js",
+    "test:admin": "node tests/test_admin_path_e2e.js",
+    "audit": "node tests/run_full_audit.js"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.19.3",
+    "bcryptjs": "^3.0.3",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.6",
+    "express": "^5.3.0",
+    "express-rate-limit": "^8.7.1",
+    "helmet": "^8.3.0",
+    "jsonwebtoken": "^9.0.3",
+    "pdfkit": "^0.20.2",
+    "prisma": "^6.19.3",
+    "puppeteer-core": "^25.15.0",
+    "zod": "^4.6.7"
+  }
+}

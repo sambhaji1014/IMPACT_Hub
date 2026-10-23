@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About Us & Platform Mission — ImpactHub</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+  <!-- Site Header -->
+  <header class="site-header">
+    <div class="container nav-container">
+      <a href="index.html" class="brand-logo" style="text-decoration: none;">
+        <div class="brand-logo-svg">
+          <svg viewBox="0 0 24 24">
+            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+          </svg>
+        </div>
+        <div class="brand-text-wrap" style="margin-left: 0.6rem;">
+          Impact<span class="hub-accent">Hub</span>
+        </div>
+      </a>
+
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="campaigns.html">Campaigns</a></li>
+        <li><a href="ngos.html">NGO Directory</a></li>
+        <li><a href="volunteer.html">Volunteer</a></li>
+        <li><a href="about.html" class="active">About</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <li><a href="dashboard.html">Dashboard</a></li>
+      </ul>
+
+      <div class="nav-actions">
+        <button class="mobile-menu-btn" aria-label="Toggle menu"><i class="fas fa-bars"></i></button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Banner -->
+  <section class="section-pale" style="padding: 4.5rem 0 3.5rem 0; text-align: center;">
+    <div class="container container-sm">
+      <div class="section-badge"><i class="fas fa-bullseye"></i> Purpose & Vision</div>
+      <h1 style="font-size: 2.6rem; margin-bottom: 1.25rem;">Connecting Willing Citizens with<br><span class="highlight-text">Grassroots Social Progress</span></h1>
+      <p style="font-size: 1.15rem; line-height: 1.6; color: var(--text-muted);">
+        ImpactHub was built to eliminate discovery friction, bridge the trust deficit in philanthropy, and unite NGOs, volunteers, and donors into a transparent, verifiable ecosystem.
+      </p>
+    </div>
+  </section>
+
+  <!-- Problem vs Solution Architecture -->
+  <section style="padding: 3.5rem 0 2rem 0;">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-badge"><i class="fas fa-balance-scale"></i> Problem & Solution</div>
+        <h2>Why We Built ImpactHub</h2>
+        <p>Analyzing key structural challenges in today's social sector and our technological response.</p>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2.5rem; margin-bottom: 3.5rem;">
+        
+        <!-- The Problem Card -->
+        <div class="problem-card" style="padding: 2.25rem; border-left: 5px solid #EF4444; background: #FFFFFF; border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); border-top: 1px solid var(--border-light); border-right: 1px solid var(--border-light); border-bottom: 1px solid var(--border-light);">
+          <div class="problem-icon-wrap" style="background: #FEE2E2; color: #DC2626; width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; margin-bottom: 1rem;">
+            <i class="fas fa-exclamation-triangle"></i>
+          </div>
+          <h3 style="margin-bottom: 0.75rem; color: #991B1B;">The Traditional Social Sector Challenge</h3>
+          <ul style="list-style: none; display: flex; flex-direction: column; gap: 1rem; font-size: 0.92rem; color: var(--text-main); margin-top: 1rem;">
+            <li style="display: flex; gap: 0.75rem; align-items: flex-start;">
+              <i class="fas fa-times-circle" style="color: #DC2626; margin-top: 0.2rem;"></i>
+              <span><strong>Scattered NGO Information:</strong> Grassroots organizations struggle to reach supporters due to high marketing costs and scattered social media channels.</span>
+            </li>
+            <li style="display: flex; gap: 0.75rem; align-items: flex-start;">
+              <i class="fas fa-times-circle" style="color: #DC2626; margin-top: 0.2rem;"></i>
+              <span><strong>Donor Trust Deficit:</strong> Contributors hesitate to support initiatives because financial flows lack transparent milestone tracking and audit receipts.</span>
+            </li>
+            <li style="display: flex; gap: 0.75rem; align-items: flex-start;">
+              <i class="fas fa-times-circle" style="color: #DC2626; margin-top: 0.2rem;"></i>
+              <span><strong>Volunteer Coordination Friction:</strong> Tracking volunteers through ad-hoc chat groups creates scheduling confusion and unreliable attendance.</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- The Solution Card -->
+        <div class="problem-card" style="padding: 2.25rem; border-left: 5px solid var(--accent-green); background: #FFFFFF; border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); border-top: 1px solid var(--border-light); border-right: 1px solid var(--border-light); border-bottom: 1px solid var(--border-light);">
+          <div class="problem-icon-wrap" style="background: var(--accent-green-light); color: var(--accent-green); width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; margin-bottom: 1rem;">
+            <i class="fas fa-check-circle"></i>
+          </div>
+          <h3 style="margin-bottom: 0.75rem; color: var(--accent-green);">The ImpactHub Solution</h3>
+          <ul style="list-style: none; display: flex; flex-direction: column; gap: 1rem; font-size: 0.92rem; color: var(--text-main); margin-top: 1rem;">
+            <li style="display: flex; gap: 0.75rem; align-items: flex-start;">
+              <i class="fas fa-check-circle" style="color: var(--accent-green); margin-top: 0.2rem;"></i>
+              <span><strong>Verified Non-Profit Profiles:</strong> Centralized, categorized profiles with documented impact areas and transparent team contact details.</span>
+            </li>
+            <li style="display: flex; gap: 0.75rem; align-items: flex-start;">
+              <i class="fas fa-check-circle" style="color: var(--accent-green); margin-top: 0.2rem;"></i>
+              <span><strong>Milestone-Based Crowdfunding:</strong> Every contribution updates live progress meters and produces instant, verifiable receipts.</span>
+            </li>
+            <li style="display: flex; gap: 0.75rem; align-items: flex-start;">
+              <i class="fas fa-check-circle" style="color: var(--accent-green); margin-top: 0.2rem;"></i>
+              <span><strong>Integrated Volunteer Rostering:</strong> Digital passes, capacity limits, skill filters, and role-authorized status management for NGO coordinators.</span>
+            </li>
+          </ul>
+        </div>
+
+      </div>
+
+      <!-- Core Values -->
+      <div class="section-header">
+        <div class="section-badge"><i class="fas fa-heart"></i> Guiding Principles</div>
+        <h2>Our Core Values</h2>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; margin-bottom: 4rem;">
+        <div class="role-card" style="padding: 2rem;">
+          <div class="role-badge" style="background: var(--accent-green-light); color: var(--accent-green); width: 42px; height: 42px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; margin-bottom: 1rem;">
+            <i class="fas fa-shield-alt"></i>
+          </div>
+          <h3 style="margin-bottom: 0.5rem;">Radical Transparency</h3>
+          <p style="font-size: 0.9rem; line-height: 1.5; color: var(--text-muted);">
+            Every contribution and registered volunteer activity is traceable with milestone updates and verifiable receipts.
+          </p>
+        </div>
+
+        <div class="role-card" style="padding: 2rem;">
+          <div class="role-badge" style="background: #F0FDF4; color: #166534; width: 42px; height: 42px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; margin-bottom: 1rem;">
+            <i class="fas fa-seedling"></i>
+          </div>
+          <h3 style="margin-bottom: 0.5rem;">Grassroots First</h3>
+          <p style="font-size: 0.9rem; line-height: 1.5; color: var(--text-muted);">
+            Prioritizing community-level initiatives that create direct, authentic outcomes without administrative friction.
+          </p>
+        </div>
+
+        <div class="role-card" style="padding: 2rem;">
+          <div class="role-badge" style="background: #EFF6FF; color: #1D4ED8; width: 42px; height: 42px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; margin-bottom: 1rem;">
+            <i class="fas fa-users-cog"></i>
+          </div>
+          <h3 style="margin-bottom: 0.5rem;">Dedicated Role Workflows</h3>
+          <p style="font-size: 0.9rem; line-height: 1.5; color: var(--text-muted);">
+            Distinct tools and permission-enforced interfaces built specifically for donors, volunteers, and NGO organizers.
+          </p>
+        </div>
+      </div>
+
+      <!-- Founding & Advisory Team Section -->
+      <div class="section-header" id="team">
+        <div class="section-badge"><i class="fas fa-users"></i> Leadership & Advisory</div>
+        <h2>The Team Behind ImpactHub</h2>
+        <p>Combining social sector expertise with robust full-stack engineering.</p>
+      </div>
+
+      <div class="stories-grid">
+        <div class="story-card" style="text-align: center; align-items: center; padding: 2rem;">
+          <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=180&auto=format&fit=crop&q=80" alt="Dr. Meera Nambiar" style="width: 90px; height: 90px; border-radius: 50%; object-fit: cover; margin-bottom: 1rem; border: 3px solid var(--accent-green);">
+          <h4>Dr. Meera Nambiar</h4>
+          <span style="font-size: 0.85rem; color: var(--accent-green); font-weight: 600; margin-bottom: 0.5rem; display: block;">Social Sector Advisor</span>
+          <p style="font-size: 0.88rem; font-style: normal; line-height: 1.5; color: var(--text-muted);">14+ years of grassroots rural development and public policy experience across Maharashtra and Karnataka.</p>
+        </div>
+
+        <div class="story-card" style="text-align: center; align-items: center; padding: 2rem;">
+          <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=180&auto=format&fit=crop&q=80" alt="Aditya Kulkarni" style="width: 90px; height: 90px; border-radius: 50%; object-fit: cover; margin-bottom: 1rem; border: 3px solid var(--accent-green);">
+          <h4>Aditya Kulkarni</h4>
+          <span style="font-size: 0.85rem; color: var(--accent-green); font-weight: 600; margin-bottom: 0.5rem; display: block;">Platform & Systems Architect</span>
+          <p style="font-size: 0.88rem; font-style: normal; line-height: 1.5; color: var(--text-muted);">Leads the development of secure authentication, role authorization, responsive interfaces, and verifiable data ledgers.</p>
+        </div>
+
+        <div class="story-card" style="text-align: center; align-items: center; padding: 2rem;">
+          <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=180&auto=format&fit=crop&q=80" alt="Neha Verma" style="width: 90px; height: 90px; border-radius: 50%; object-fit: cover; margin-bottom: 1rem; border: 3px solid var(--accent-green);">
+          <h4>Neha Verma</h4>
+          <span style="font-size: 0.85rem; color: var(--accent-green); font-weight: 600; margin-bottom: 0.5rem; display: block;">Community & Partnerships</span>
+          <p style="font-size: 0.88rem; font-style: normal; line-height: 1.5; color: var(--text-muted);">Manages non-profit vetting standards, volunteer welfare, and partnership development across urban and rural chapters.</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Site Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col" style="max-width: 340px;">
+          <a href="index.html" class="brand-logo" style="text-decoration: none; margin-bottom: 0.85rem; display: inline-flex;">
+            <div class="brand-logo-svg" style="background: rgba(255,255,255,0.15);">
+              <svg viewBox="0 0 24 24">
+                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="#FFFFFF"/>
+              </svg>
+            </div>
+            <div class="brand-text-wrap" style="color: #FFFFFF; margin-left: 0.6rem;">
+              Impact<span style="color: #86EFAC;">Hub</span>
+            </div>
+          </a>
+          <p style="font-size: 0.88rem; line-height: 1.6; color: #9CA3AF; margin-bottom: 1rem;">
+            A transparent platform connecting non-governmental organizations, donors, and volunteers to create verifiable social progress.
+          </p>
+          <div style="font-size: 0.78rem; color: #9CA3AF; background: rgba(255,255,255,0.06); padding: 0.6rem 0.85rem; border-radius: var(--radius-sm); border: 1px solid rgba(255,255,255,0.1);">
+            <i class="fas fa-flask" style="color: #86EFAC; margin-right: 0.35rem;"></i>
+            <strong>Evaluation Environment:</strong> Simulated contributions and activity tracking for functional demonstration.
+          </div>
+        </div>
+
+        <div class="footer-col">
+          <h4>Platform</h4>
+          <ul class="footer-links">
+            <li><a href="campaigns.html">Active Campaigns</a></li>
+            <li><a href="ngos.html">NGO Directory</a></li>
+            <li><a href="volunteer.html">Volunteer Drives</a></li>
+            <li><a href="dashboard.html">Role Dashboard</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Accounts</h4>
+          <ul class="footer-links">
+            <li><a href="login.html">Sign In</a></li>
+            <li><a href="signup.html">Create Account</a></li>
+            <li><a href="about.html">About Platform</a></li>
+            <li><a href="contact.html">Contact & Support</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Trust & Ethics</h4>
+          <ul class="footer-links">
+            <li><a href="impact.html">Impact Verification</a></li>
+            <li><a href="about.html">Financial Transparency</a></li>
+            <li><a href="contact.html">Community Guidelines</a></li>
+            <li><a href="about.html#governance">NGO Due Diligence</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <span>&copy; 2026 ImpactHub. All rights reserved.</span>
+        <span>Transparent Philanthropy & Community Mobilization Platform</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/api.js"></script>
+  <script src="js/store.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

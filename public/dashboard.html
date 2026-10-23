@@ -1,0 +1,1304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard — ImpactHub</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='%2310B981' d='M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z'/></svg>">
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/responsive.css">
+  <style>
+    .persona-pill {
+      border: 1px solid var(--border-light);
+      background: #FFFFFF;
+      padding: 0.35rem 0.85rem;
+      border-radius: var(--radius-pill);
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      transition: all 0.2s;
+    }
+    .persona-pill:hover, .persona-pill.active {
+      border-color: var(--accent-green);
+      color: var(--accent-green);
+      background: var(--accent-green-light);
+    }
+    .admin-tab-btn {
+      background: none;
+      border: none;
+      padding: 0.75rem 1.25rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      border-bottom: 2px solid transparent;
+      cursor: pointer;
+    }
+    .admin-tab-btn.active {
+      color: #2563EB;
+      border-bottom-color: #2563EB;
+    }
+  </style>
+</head>
+<body style="background: var(--bg-secondary); min-height: 100vh; display: flex; flex-direction: column;">
+
+  <!-- Site Header -->
+  <header class="site-header">
+    <div class="container nav-container">
+      <a href="/" class="brand-logo" style="text-decoration: none;">
+        <div class="brand-logo-svg">
+          <svg viewBox="0 0 24 24">
+            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+          </svg>
+        </div>
+        <div class="brand-text-wrap" style="margin-left: 0.6rem;">
+          Impact<span class="hub-accent">Hub</span>
+        </div>
+      </a>
+
+      <ul class="nav-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/campaigns">Campaigns</a></li>
+        <li><a href="/drives">Volunteer Drives</a></li>
+        <li><a href="/ngos">NGO Directory</a></li>
+        <li><a href="/leaderboard">Leaderboard</a></li>
+        <li><a href="/dashboard" class="active">Dashboard</a></li>
+      </ul>
+
+      <div class="nav-actions">
+        <button class="mobile-menu-btn" aria-label="Toggle menu"><i class="fas fa-bars"></i></button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Wrap -->
+  <main style="padding: 2rem 0 5rem 0; flex-grow: 1;">
+    <div class="container">
+
+      <!-- Dynamic Email Verification Banner -->
+      <div id="emailVerificationBanner" style="display: none; background: #FFFBEB; border: 1.5px solid #F59E0B; border-radius: var(--radius-lg); padding: 1.15rem 1.5rem; margin-bottom: 1.5rem; box-shadow: var(--shadow-sm); align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
+        <div style="display: flex; align-items: center; gap: 0.85rem;">
+          <div style="width: 38px; height: 38px; border-radius: 50%; background: #FEF3C7; color: #D97706; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; flex-shrink: 0;">
+            <i class="fas fa-exclamation-triangle"></i>
+          </div>
+          <div>
+            <strong style="color: #92400E; font-size: 0.95rem; display: block;">Email Verification Pending</strong>
+            <p style="margin: 0.2rem 0 0 0; font-size: 0.84rem; color: #B45309;">Please verify your email address to unlock donations, drive registrations, and publishing privileges.</p>
+          </div>
+        </div>
+        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+          <button id="quickVerifyDashboardBtn" class="btn btn-sm btn-primary" style="background: #059669; border-color: #059669; color: #fff; font-weight: 600;" onclick="window.handleQuickVerify()">
+            <i class="fas fa-check-circle"></i> Verify Account Now (Dev)
+          </button>
+          <a href="/dev-mailbox" target="_blank" class="btn btn-sm btn-outline" style="border-color: #2563EB; color: #2563EB; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 0.35rem;">
+            <i class="fas fa-inbox"></i> Open Dev Mailbox
+          </a>
+          <button id="resendVerificationBtn" class="btn btn-sm btn-outline" style="border-color: #D97706; color: #92400E; font-weight: 600;" onclick="window.handleResendVerification()">
+            <i class="fas fa-paper-plane"></i> Resend Link
+          </button>
+        </div>
+      </div>
+
+      <!-- Dynamic User Profile Header Card -->
+      <div class="dashboard-user-card" style="background: #FFFFFF; border: 1px solid var(--border-light); border-radius: var(--radius-lg); padding: 1.5rem 1.75rem; margin-bottom: 2rem; box-shadow: var(--shadow-sm); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1.25rem;">
+        <div>
+          <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.35rem; flex-wrap: wrap;">
+            <h1 style="font-size: 1.5rem; color: var(--text-main); margin: 0;" id="dashUserName">User Account</h1>
+            <span class="badge" style="background: var(--accent-green-light); color: var(--accent-green); font-size: 0.82rem; font-weight: 700;" id="dashUserRoleBadge">
+              Authenticated
+            </span>
+            <span id="ngoVerificationNoticeBadge" style="display: none;"></span>
+          </div>
+          <div style="font-size: 0.88rem; color: var(--text-muted);" id="dashUserMeta">
+            Loading user profile...
+          </div>
+        </div>
+
+        <!-- Role Actions & Settings -->
+        <div style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
+          <button class="btn btn-sm btn-outline" onclick="window.openAccountSettingsModal()" title="Account Settings & Privacy">
+            <i class="fas fa-cog"></i> Account Settings
+          </button>
+          <button class="btn btn-sm btn-outline" onclick="window.handleLogout()" style="color: #DC2626; border-color: #FCA5A5;">
+            <i class="fas fa-sign-out-alt"></i> Sign Out
+          </button>
+        </div>
+      </div>
+
+      <!-- ===================================================================
+           ROLE 1: VOLUNTEER DASHBOARD VIEW
+           =================================================================== -->
+      <div id="volunteerDashboardView" style="display: none;">
+        
+        <!-- Metrics Grid -->
+        <div class="stats-overview-grid" style="margin-bottom: 2rem;">
+          <div class="stat-metric-card">
+            <div class="stat-icon-square" style="background: var(--accent-green-light); color: var(--accent-green);">
+              <i class="fas fa-clipboard-check"></i>
+            </div>
+            <div>
+              <div class="stat-number" id="volStatApplied">0</div>
+              <div class="stat-label">Applications Submitted</div>
+            </div>
+          </div>
+
+          <div class="stat-metric-card">
+            <div class="stat-icon-square" style="background: #EFF6FF; color: #2563EB;">
+              <i class="fas fa-calendar-alt"></i>
+            </div>
+            <div>
+              <div class="stat-number" id="volStatConfirmed">0</div>
+              <div class="stat-label">Confirmed Upcoming Drives</div>
+            </div>
+          </div>
+
+          <div class="stat-metric-card">
+            <div class="stat-icon-square" style="background: #F0FDFA; color: #0D9488;">
+              <i class="fas fa-user-clock"></i>
+            </div>
+            <div>
+              <div class="stat-number" id="volStatHours">0 hrs</div>
+              <div class="stat-label">Verified Service Hours</div>
+            </div>
+          </div>
+
+          <div class="stat-metric-card">
+            <div class="stat-icon-square" style="background: #FEF3C7; color: #B45309;">
+              <i class="fas fa-award"></i>
+            </div>
+            <div>
+              <div class="stat-number" id="volStatPoints">0</div>
+              <div class="stat-label">Impact Points Earned</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Rewards & Level Milestones Card -->
+        <div style="background: #FFFFFF; border: 1.5px solid var(--accent-green); border-radius: var(--radius-lg); padding: 1.75rem; margin-bottom: 2.5rem; box-shadow: var(--shadow-sm);">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.25rem;">
+            <div>
+              <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem;">
+                <span class="badge" style="background: var(--accent-green-light); color: var(--accent-green); font-weight: 700;">
+                  <i class="fas fa-medal"></i> <span id="volLevelName">Bronze Changemaker</span>
+                </span>
+                <span style="font-size: 0.85rem; color: var(--text-muted);">&bull; Rank Level</span>
+              </div>
+              <h2 style="font-size: 1.25rem; color: var(--text-main); margin: 0;">Verified Gamification & Rewards</h2>
+            </div>
+            <a href="/leaderboard" class="btn btn-sm btn-outline"><i class="fas fa-trophy"></i> View Public Leaderboard</a>
+          </div>
+
+          <div style="margin-bottom: 1.25rem;">
+            <div style="display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 0.4rem;">
+              <span>Progress to <strong id="volNextLevelName">Silver Advocate</strong>:</span>
+              <span id="volLevelProgressText">0 / 15 hrs</span>
+            </div>
+            <div class="progress-track" style="height: 10px;">
+              <div class="progress-bar" id="volLevelProgressBar" style="width: 0%;"></div>
+            </div>
+          </div>
+
+          <div>
+            <span style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 0.65rem;">Unlocked Badges:</span>
+            <div style="display: flex; gap: 0.65rem; flex-wrap: wrap;" id="volBadgesList">
+              <!-- Rendered dynamically -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 1: My Applications Table -->
+        <div style="background: #FFFFFF; border: 1px solid var(--border-light); border-radius: var(--radius-lg); padding: 1.75rem; margin-bottom: 2.5rem; box-shadow: var(--shadow-sm);">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 0.5rem;">
+            <div>
+              <h2 style="font-size: 1.25rem; color: var(--text-main); margin-bottom: 0.2rem;">My Volunteer Applications & Digital Passes</h2>
+              <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0;">View QR entry passes, add drives to calendar (.ics), and download verified attendance certificates.</p>
+            </div>
+            <a href="/drives" class="btn btn-sm btn-outline"><i class="fas fa-search"></i> Find More Drives</a>
+          </div>
+
+          <div style="overflow-x: auto;">
+            <table class="custom-table" style="width: 100%;">
+              <thead>
+                <tr>
+                  <th>Opportunity & NGO</th>
+                  <th>Date & Time</th>
+                  <th>Location</th>
+                  <th>Status</th>
+                  <th>Pass & Certificate</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="volApplicationsTbody">
+                <!-- Rendered dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Section 2: Recommended Drives -->
+        <div style="margin-bottom: 2.5rem;">
+          <h3 style="font-size: 1.25rem; margin-bottom: 1rem; color: var(--text-main);">Upcoming Drives In Your Region</h3>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.25rem;" id="volRecommendedDrives">
+            <!-- Rendered dynamically -->
+          </div>
+        </div>
+
+        <!-- Section 3: Volunteer Profile -->
+        <div style="background: #FFFFFF; border: 1px solid var(--border-light); border-radius: var(--radius-lg); padding: 1.75rem; box-shadow: var(--shadow-sm); max-width: 650px;">
+          <h3 style="font-size: 1.2rem; margin-bottom: 1rem; color: var(--text-main);">My Volunteer Profile</h3>
+          <form id="volProfileForm">
+            <div class="form-group" style="margin-bottom: 1rem;">
+              <label style="font-weight: 600; font-size: 0.88rem; display: block; margin-bottom: 0.3rem;">Full Name</label>
+              <input type="text" class="form-control" id="volProfName" required style="width: 100%; padding: 0.6rem 0.8rem;">
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+              <div>
+                <label style="font-weight: 600; font-size: 0.88rem; display: block; margin-bottom: 0.3rem;">Phone Number</label>
+                <input type="tel" class="form-control" id="volProfPhone" style="width: 100%; padding: 0.6rem 0.8rem;">
+              </div>
+              <div>
+                <label style="font-weight: 600; font-size: 0.88rem; display: block; margin-bottom: 0.3rem;">City & State</label>
+                <input type="text" class="form-control" id="volProfCity" style="width: 100%; padding: 0.6rem 0.8rem;">
+              </div>
+            </div>
+            <div class="form-group" style="margin-bottom: 1.25rem;">
+              <label style="font-weight: 600; font-size: 0.88rem; display: block; margin-bottom: 0.3rem;">Skills & Volunteer Interests</label>
+              <textarea class="form-control" id="volProfBio" rows="3" style="width: 100%; padding: 0.6rem 0.8rem; font-size: 0.9rem;" placeholder="e.g. Teaching foundational math, tree plantation, first aid..."></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">
+              <i class="fas fa-save"></i> Save Profile
+            </button>
+          </form>
+        </div>
+
+      </div>
+
+      <!-- ===================================================================
+           ROLE 2: DONOR DASHBOARD VIEW
+           =================================================================== -->
+      <div id="donorDashboardView" style="display: none;">
+        
+        <!-- Metrics Grid -->
+        <div class="stats-overview-grid" style="margin-bottom: 2rem;">
+          <div class="stat-metric-card">
+            <div class="stat-icon-square" style="background: var(--accent-green-light); color: var(--accent-green);">
+              <i class="fas fa-hand-holding-heart"></i>
+            </div>
+            <div>
+              <div class="stat-number" id="donorStatTotal">₹0</div>
+              <div class="stat-label">Total Verified Contributions</div>
+            </div>
+          </div>
+
+          <div class="stat-metric-card">
+            <div class="stat-icon-square" style="background: #EFF6FF; color: #2563EB;">
+              <i class="fas fa-bullhorn"></i>
+            </div>
+            <div>
+              <div class="stat-number" id="donorStatCount">0</div>
+              <div class="stat-label">Campaigns Supported</div>
+            </div>
+          </div>
+
+          <div class="stat-metric-card">
+            <div class="stat-icon-square" style="background: #FEF3C7; color: #B45309;">
+              <i class="fas fa-award"></i>
+            </div>
+            <div>
+              <div class="stat-number" id="donorStatPoints">0</div>
+              <div class="stat-label">Donor Impact Points</div>
+            </div>
+          </div>
+
+          <div class="stat-metric-card">
+            <div class="stat-icon-square" style="background: #F0FDFA; color: #0D9488;">
+              <i class="fas fa-file-invoice-dollar"></i>
+            </div>
+            <div>
+              <div class="stat-number">100%</div>
+              <div class="stat-label">Section 80G Receipts</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Donor Tier Status Card -->
+        <div style="background: #FFFFFF; border: 1.5px solid #2563EB; border-radius: var(--radius-lg); padding: 1.75rem; margin-bottom: 2.5rem; box-shadow: var(--shadow-sm);">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.25rem;">
+            <div>
+              <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem;">
+                <span class="badge" style="background: #EFF6FF; color: #2563EB; font-weight: 700;">
+                  <i class="fas fa-medal"></i> <span id="donorTierName">Community Supporter</span>
+                </span>
+                <span style="font-size: 0.85rem; color: var(--text-muted);">&bull; Recognition Tier</span>
+              </div>
+              <h2 style="font-size: 1.25rem; color: var(--text-main); margin: 0;">Philanthropic Tier & Rewards</h2>
+            </div>
+            <a href="/leaderboard" class="btn btn-sm btn-outline"><i class="fas fa-award"></i> View Tier Rules</a>
+          </div>
+
+          <div style="margin-bottom: 1.25rem;">
+            <div style="display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 0.4rem;">
+              <span>Progress to <strong id="donorNextTierName">Cause Patron</strong>:</span>
+              <span id="donorTierProgressText">₹0 / ₹2,500</span>
+            </div>
+            <div class="progress-track" style="height: 10px;">
+              <div class="progress-bar" id="donorTierProgressBar" style="width: 0%; background: #2563EB;"></div>
+            </div>
+          </div>
+
+          <div>
+            <span style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 0.65rem;">Unlocked Supporter Badges:</span>
+            <div style="display: flex; gap: 0.65rem; flex-wrap: wrap;" id="donorBadgesList">
+              <!-- Rendered dynamically -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 1: Donation Ledger -->
+        <div style="background: #FFFFFF; border: 1px solid var(--border-light); border-radius: var(--radius-lg); padding: 1.75rem; margin-bottom: 2.5rem; box-shadow: var(--shadow-sm);">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 0.5rem;">
+            <div>
+              <h2 style="font-size: 1.25rem; color: var(--text-main); margin-bottom: 0.2rem;">My Donation Ledger & Section 80G Receipts</h2>
+              <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0;">All contributions are recorded on the server with verifiable tax receipt numbers.</p>
+            </div>
+            <a href="/campaigns" class="btn btn-sm btn-primary"><i class="fas fa-heart"></i> Support a Campaign</a>
+          </div>
+
+          <div style="overflow-x: auto;">
+            <table class="custom-table" style="width: 100%;">
+              <thead>
+                <tr>
+                  <th>Campaign Supported</th>
+                  <th>Date</th>
+                  <th>Amount (₹)</th>
+                  <th>Receipt Reference</th>
+                  <th>Status</th>
+                  <th>Official Receipt</th>
+                </tr>
+              </thead>
+              <tbody id="donorHistoryTbody">
+                <!-- Rendered dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Section 2: Supported Campaigns Progress -->
+        <div style="margin-bottom: 2.5rem;">
+          <h3 style="font-size: 1.25rem; margin-bottom: 1rem; color: var(--text-main);">Live Progress of Supported Campaigns</h3>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.25rem;" id="donorSupportedCampaigns">
+            <!-- Rendered dynamically -->
+          </div>
+        </div>
+
+        <!-- Section 3: Donor Profile -->
+        <div style="background: #FFFFFF; border: 1px solid var(--border-light); border-radius: var(--radius-lg); padding: 1.75rem; box-shadow: var(--shadow-sm); max-width: 650px;">
+          <h3 style="font-size: 1.2rem; margin-bottom: 1rem; color: var(--text-main);">Donor Profile & Preferences</h3>
+          <form id="donorProfileForm">
+            <div class="form-group" style="margin-bottom: 1rem;">
+              <label style="font-weight: 600; font-size: 0.88rem; display: block; margin-bottom: 0.3rem;">Full Name</label>
+              <input type="text" class="form-control" id="donorProfName" required style="width: 100%; padding: 0.6rem 0.8rem;">
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.25rem;">
+              <div>
+                <label style="font-weight: 600; font-size: 0.88rem; display: block; margin-bottom: 0.3rem;">Phone</label>
+                <input type="tel" class="form-control" id="donorProfPhone" style="width: 100%; padding: 0.6rem 0.8rem;">
+              </div>
+              <div>
+                <label style="font-weight: 600; font-size: 0.88rem; display: block; margin-bottom: 0.3rem;">City</label>
+                <input type="text" class="form-control" id="donorProfCity" style="width: 100%; padding: 0.6rem 0.8rem;">
+              </div>
+            </div>
+            <button type="submit" class="btn btn-primary">
+              <i class="fas fa-save"></i> Save Profile
+            </button>
+          </form>
+        </div>
+
+      </div>
+
+      <!-- ===================================================================
+           ROLE 3: NGO ORGANIZER PORTAL
+           =================================================================== -->
+      <div id="ngoDashboardView" style="display: none;">
+        
+        <!-- NGO Verification Status Banner -->
+        <div id="ngoVerificationAlert" style="margin-bottom: 1.5rem;">
+          <!-- Rendered dynamically -->
+        </div>
+
+        <!-- Metrics Grid -->
+        <div class="stats-overview-grid" style="margin-bottom: 2rem;">
+          <div class="stat-metric-card">
+            <div class="stat-icon-square" style="background: var(--accent-green-light); color: var(--accent-green);">
+              <i class="fas fa-bullhorn"></i>
+            </div>
+            <div>
+              <div class="stat-number" id="ngoStatCampaigns">0</div>
+              <div class="stat-label">Active Campaigns</div>
+            </div>
+          </div>
+
+          <div class="stat-metric-card">
+            <div class="stat-icon-square" style="background: #EFF6FF; color: #2563EB;">
+              <i class="fas fa-rupee-sign"></i>
+            </div>
+            <div>
+              <div class="stat-number" id="ngoStatRaised">₹0</div>
+              <div class="stat-label">Total Funds Raised</div>
+            </div>
+          </div>
+
+          <div class="stat-metric-card">
+            <div class="stat-icon-square" style="background: #F0FDFA; color: #0D9488;">
+              <i class="fas fa-calendar-check"></i>
+            </div>
+            <div>
+              <div class="stat-number" id="ngoStatOpportunities">0</div>
+              <div class="stat-label">Volunteer Drives</div>
+            </div>
+          </div>
+
+          <div class="stat-metric-card">
+            <div class="stat-icon-square" style="background: #FEF3C7; color: #B45309;">
+              <i class="fas fa-users"></i>
+            </div>
+            <div>
+              <div class="stat-number" id="ngoStatApplicants">0</div>
+              <div class="stat-label">Volunteer Registrations</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- NGO Navigation Tabs -->
+        <div class="dashboard-tabs-bar">
+          <button class="dashboard-tab-link active" data-tab="campaigns" onclick="switchNgoTab('campaigns')">
+            <i class="fas fa-bullhorn"></i> My Campaigns
+          </button>
+          <button class="dashboard-tab-link" data-tab="opportunities" onclick="switchNgoTab('opportunities')">
+            <i class="fas fa-calendar-plus"></i> Volunteer Drives
+          </button>
+          <button class="dashboard-tab-link" data-tab="applicants" onclick="switchNgoTab('applicants')">
+            <i class="fas fa-user-check"></i> Participant Roster & Attendance
+          </button>
+          <button class="dashboard-tab-link" data-tab="profile" onclick="switchNgoTab('profile')">
+            <i class="fas fa-building"></i> Organization Profile
+          </button>
+        </div>
+
+        <!-- Tab 1: Campaigns Management -->
+        <div id="ngoTabPane-campaigns" class="dashboard-tab-pane">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 0.5rem;">
+            <div>
+              <h2 style="font-size: 1.25rem; color: var(--text-main); margin-bottom: 0.2rem;">Published Campaigns</h2>
+              <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0;">Manage your fundraising initiatives and track donor contributions.</p>
+            </div>
+            <button class="btn btn-sm btn-primary" onclick="openCreateCampaignModal()">
+              <i class="fas fa-plus-circle"></i> Create New Campaign
+            </button>
+          </div>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem;" id="ngoCampaignsList">
+            <!-- Rendered dynamically -->
+          </div>
+        </div>
+
+        <!-- Tab 2: Volunteer Drives Management -->
+        <div id="ngoTabPane-opportunities" class="dashboard-tab-pane hidden">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 0.5rem;">
+            <div>
+              <h2 style="font-size: 1.25rem; color: var(--text-main); margin-bottom: 0.2rem;">Scheduled Volunteer Drives</h2>
+              <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0;">Publish weekend field initiatives and recruit passionate participants.</p>
+            </div>
+            <button class="btn btn-sm btn-primary" onclick="openCreateOpportunityModal()">
+              <i class="fas fa-plus-circle"></i> Create Volunteer Drive
+            </button>
+          </div>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem;" id="ngoOpportunitiesList">
+            <!-- Rendered dynamically -->
+          </div>
+        </div>
+
+        <!-- Tab 3: Applicants Roster & Attendance -->
+        <div id="ngoTabPane-applicants" class="dashboard-tab-pane hidden">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 0.5rem;">
+            <div>
+              <h2 style="font-size: 1.25rem; color: var(--text-main); margin-bottom: 0.2rem;">Volunteer Participant Roster & Attendance</h2>
+              <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0;">Verify ground attendance and log service hours to award official volunteer points.</p>
+            </div>
+            <button class="btn btn-sm btn-outline" onclick="exportApplicantsCSV()">
+              <i class="fas fa-file-csv"></i> Export CSV
+            </button>
+          </div>
+
+          <div style="background: #FFFFFF; border: 1px solid var(--border-light); border-radius: var(--radius-lg); padding: 1.5rem; overflow-x: auto; box-shadow: var(--shadow-sm);">
+            <table class="custom-table" style="width: 100%;">
+              <thead>
+                <tr>
+                  <th>Volunteer Details</th>
+                  <th>Drive Name</th>
+                  <th>Pass Ref</th>
+                  <th>Status</th>
+                  <th>Hours Logged</th>
+                  <th>Attendance Action</th>
+                </tr>
+              </thead>
+              <tbody id="ngoApplicantsTbody">
+                <!-- Rendered dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Tab 4: NGO Profile -->
+        <div id="ngoTabPane-profile" class="dashboard-tab-pane hidden">
+          <div style="background: #FFFFFF; border: 1px solid var(--border-light); border-radius: var(--radius-lg); padding: 2rem; max-width: 650px; box-shadow: var(--shadow-sm);">
+            <h2 style="font-size: 1.25rem; color: var(--text-main); margin-bottom: 1.25rem;">Organization Profile</h2>
+            <form id="ngoProfileForm">
+              <div class="form-group" style="margin-bottom: 1rem;">
+                <label style="font-weight: 600; font-size: 0.88rem; display: block; margin-bottom: 0.3rem;">Organization / Trust Name *</label>
+                <input type="text" class="form-control" id="ngoProfOrg" required style="width: 100%; padding: 0.6rem 0.8rem;">
+              </div>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                <div>
+                  <label style="font-weight: 600; font-size: 0.88rem; display: block; margin-bottom: 0.3rem;">Primary Cause</label>
+                  <select class="form-control" id="ngoProfCat" style="width: 100%; padding: 0.6rem 0.8rem;">
+                    <option value="Environment">Environment</option>
+                    <option value="Education">Education</option>
+                    <option value="Healthcare">Healthcare</option>
+                    <option value="Animal Welfare">Animal Welfare</option>
+                    <option value="Child Welfare">Child Welfare</option>
+                  </select>
+                </div>
+                <div>
+                  <label style="font-weight: 600; font-size: 0.88rem; display: block; margin-bottom: 0.3rem;">City & State</label>
+                  <input type="text" class="form-control" id="ngoProfCity" style="width: 100%; padding: 0.6rem 0.8rem;">
+                </div>
+              </div>
+              <div class="form-group" style="margin-bottom: 1.5rem;">
+                <label style="font-weight: 600; font-size: 0.88rem; display: block; margin-bottom: 0.3rem;">Mission & Bio</label>
+                <textarea class="form-control" id="ngoProfBio" rows="4" style="width: 100%; padding: 0.6rem 0.8rem; font-size: 0.9rem;"></textarea>
+              </div>
+              <button type="submit" class="btn btn-primary">
+                <i class="fas fa-save"></i> Save NGO Profile
+              </button>
+            </form>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ===================================================================
+           ROLE 4: ADMIN SUPER-PORTAL
+           =================================================================== -->
+      <!-- ===================================================================
+           ROLE 4: ADMIN SUPER-PORTAL
+           =================================================================== -->
+      <div id="adminDashboardView" style="display: none;">
+        
+        <!-- Admin Navigation Tabs -->
+        <div style="display: flex; gap: 0.5rem; border-bottom: 2px solid var(--border-light); margin-bottom: 2rem; flex-wrap: wrap;">
+          <button class="admin-tab-btn active" id="adminTabBtnOverview" onclick="switchAdminTab('overview', true)">
+            <i class="fas fa-chart-line"></i> Admin Overview
+          </button>
+          <button class="admin-tab-btn" id="adminTabBtnVerification" onclick="switchAdminTab('verification', true)">
+            <i class="fas fa-check-double"></i> Verification Queue
+            <span id="adminPendingNgoBadge" class="badge" style="background: #FEF3C7; color: #D97706; margin-left: 0.35rem; display: none;">0</span>
+          </button>
+          <button class="admin-tab-btn" id="adminTabBtnAudit" onclick="switchAdminTab('audit', true)">
+            <i class="fas fa-history"></i> Audit Logs
+          </button>
+          <button class="admin-tab-btn" id="adminTabBtnLeaderboard" onclick="switchAdminTab('leaderboard', true)">
+            <i class="fas fa-trophy"></i> Leaderboard
+          </button>
+          <button class="admin-tab-btn" id="adminTabBtnUsers" onclick="switchAdminTab('users', true)">
+            <i class="fas fa-users-cog"></i> Users
+          </button>
+          <button class="admin-tab-btn" id="adminTabBtnReports" onclick="switchAdminTab('reports', true)">
+            <i class="fas fa-flag"></i> Flagged Content
+          </button>
+        </div>
+
+        <!-- ===============================================================
+             TAB 1: ADMIN OVERVIEW
+             =============================================================== -->
+        <div id="adminTabPaneOverview">
+          <!-- Overview Loading State -->
+          <div id="adminOverviewLoading" style="display: none; text-align: center; padding: 3rem; color: var(--text-muted);">
+            <i class="fas fa-spinner fa-spin fa-2x" style="color: var(--accent-green); margin-bottom: 1rem;"></i>
+            <p style="margin: 0;">Gathering live platform metrics from database...</p>
+          </div>
+
+          <!-- Overview Error State -->
+          <div id="adminOverviewError" style="display: none; background: #FEE2E2; border: 1px solid #FCA5A5; border-radius: var(--radius-md); padding: 1.5rem; margin-bottom: 1.5rem; text-align: center;">
+            <p id="adminOverviewErrorMsg" style="color: #991B1B; font-weight: 600; margin: 0 0 1rem 0;">Failed to load overview data.</p>
+            <button class="btn btn-sm btn-outline" style="color: #DC2626; border-color: #DC2626;" onclick="renderAdminOverviewMetrics()">
+              <i class="fas fa-redo"></i> Retry
+            </button>
+          </div>
+
+          <!-- Overview Content Grid -->
+          <div id="adminOverviewContent">
+            <!-- Platform Metrics Grid -->
+            <div class="stats-overview-grid" style="margin-bottom: 2rem;">
+              <div class="stat-metric-card">
+                <div class="stat-icon-square" style="background: #EFF6FF; color: #2563EB;">
+                  <i class="fas fa-users"></i>
+                </div>
+                <div>
+                  <div class="stat-number" id="adminStatUsers">0</div>
+                  <div class="stat-label">Total Registered Users</div>
+                  <div style="font-size: 0.76rem; color: var(--text-muted); margin-top: 0.2rem;" id="adminStatUserBreakdown">
+                    0 Volunteers &bull; 0 Donors &bull; 0 NGOs
+                  </div>
+                </div>
+              </div>
+
+              <div class="stat-metric-card">
+                <div class="stat-icon-square" style="background: var(--accent-green-light); color: var(--accent-green);">
+                  <i class="fas fa-building"></i>
+                </div>
+                <div>
+                  <div class="stat-number" id="adminStatTotalNgos">0</div>
+                  <div class="stat-label">Non-Profit Partners</div>
+                  <div style="font-size: 0.76rem; color: var(--text-muted); margin-top: 0.2rem;">
+                    <span id="adminStatVerifiedNgos" style="color: var(--accent-green); font-weight: 700;">0</span> Verified &bull;
+                    <span id="adminStatPendingNgos" style="color: #D97706; font-weight: 700;">0</span> Pending
+                  </div>
+                </div>
+              </div>
+
+              <div class="stat-metric-card">
+                <div class="stat-icon-square" style="background: #F0FDF4; color: #16A34A;">
+                  <i class="fas fa-hand-holding-heart"></i>
+                </div>
+                <div>
+                  <div class="stat-number" id="adminStatFunds">₹0</div>
+                  <div class="stat-label">Verified Donations</div>
+                  <div style="font-size: 0.76rem; color: var(--text-muted); margin-top: 0.2rem;" id="adminStatDonationsCount">
+                    0 Successful Transactions
+                  </div>
+                </div>
+              </div>
+
+              <div class="stat-metric-card">
+                <div class="stat-icon-square" style="background: #FEF3C7; color: #D97706;">
+                  <i class="fas fa-hands-helping"></i>
+                </div>
+                <div>
+                  <div class="stat-number" id="adminStatVolunteerHours">0</div>
+                  <div class="stat-label">Verified Volunteer Hours</div>
+                  <div style="font-size: 0.76rem; color: var(--text-muted); margin-top: 0.2rem;" id="adminStatVolunteersCount">
+                    0 Active Changemakers
+                  </div>
+                </div>
+              </div>
+
+              <div class="stat-metric-card">
+                <div class="stat-icon-square" style="background: #F5F3FF; color: #7C3AED;">
+                  <i class="fas fa-bullhorn"></i>
+                </div>
+                <div>
+                  <div class="stat-number" id="adminStatInitiatives">0</div>
+                  <div class="stat-label">Live Campaigns & Drives</div>
+                  <div style="font-size: 0.76rem; color: var(--text-muted); margin-top: 0.2rem;" id="adminStatCampaignsDrives">
+                    0 Campaigns &bull; 0 Drives
+                  </div>
+                </div>
+              </div>
+
+              <div class="stat-metric-card">
+                <div class="stat-icon-square" style="background: #F1F5F9; color: #475569;">
+                  <i class="fas fa-shield-alt"></i>
+                </div>
+                <div>
+                  <div class="stat-number" id="adminStatAuditLogsCount">0</div>
+                  <div class="stat-label">System Audit Events</div>
+                  <div style="font-size: 0.76rem; color: var(--text-muted); margin-top: 0.2rem;" id="adminStatPendingReports">
+                    0 Pending Flagged Reports
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Overview Quick Actions -->
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.25rem;">
+              <div style="background: #FFFFFF; border: 1px solid var(--border-light); border-radius: var(--radius-lg); padding: 1.5rem; box-shadow: var(--shadow-sm);">
+                <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem;">
+                  <i class="fas fa-clipboard-check" style="font-size: 1.3rem; color: #D97706;"></i>
+                  <h4 style="margin: 0; font-size: 1.05rem; color: var(--text-main);">Verification Action Required</h4>
+                </div>
+                <p style="font-size: 0.86rem; color: var(--text-muted); margin: 0 0 1rem 0;">Review pending NGO registration applications and grant publishing privileges to genuine causes.</p>
+                <button class="btn btn-sm btn-primary" onclick="switchAdminTab('verification', true)">
+                  <i class="fas fa-arrow-right"></i> Open Verification Queue
+                </button>
+              </div>
+
+              <div style="background: #FFFFFF; border: 1px solid var(--border-light); border-radius: var(--radius-lg); padding: 1.5rem; box-shadow: var(--shadow-sm);">
+                <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem;">
+                  <i class="fas fa-history" style="font-size: 1.3rem; color: #2563EB;"></i>
+                  <h4 style="margin: 0; font-size: 1.05rem; color: var(--text-main);">System Activity & Audit Trail</h4>
+                </div>
+                <p style="font-size: 0.86rem; color: var(--text-muted); margin: 0 0 1rem 0;">Monitor user authentications, financial transactions, verification decisions, and export compliance CSV logs.</p>
+                <button class="btn btn-sm btn-outline" onclick="switchAdminTab('audit', true)">
+                  <i class="fas fa-search"></i> Inspect Audit Logs
+                </button>
+              </div>
+
+              <div style="background: #FFFFFF; border: 1px solid var(--border-light); border-radius: var(--radius-lg); padding: 1.5rem; box-shadow: var(--shadow-sm);">
+                <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem;">
+                  <i class="fas fa-trophy" style="font-size: 1.3rem; color: #F59E0B;"></i>
+                  <h4 style="margin: 0; font-size: 1.05rem; color: var(--text-main);">Impact Leaderboard</h4>
+                </div>
+                <p style="font-size: 0.86rem; color: var(--text-muted); margin: 0 0 1rem 0;">Review top performing volunteers, philanthropic donors, and verified NGO community impact scores.</p>
+                <button class="btn btn-sm btn-outline" onclick="switchAdminTab('leaderboard', true)">
+                  <i class="fas fa-medal"></i> View Leaderboard
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===============================================================
+             TAB 2: VERIFICATION QUEUE
+             =============================================================== -->
+        <div id="adminTabPaneVerification" style="display: none;">
+          <div style="background: #FFFFFF; border: 1px solid var(--border-light); border-radius: var(--radius-lg); padding: 1.5rem; box-shadow: var(--shadow-sm);">
+            
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.25rem;">
+              <div>
+                <h3 style="font-size: 1.2rem; color: var(--text-main); margin: 0 0 0.25rem 0;">
+                  <i class="fas fa-shield-alt" style="color: var(--accent-green);"></i> Non-Profit Verification & Compliance Queue
+                </h3>
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0;">Review registration details, inspect official credentials, and approve or reject publishing privileges.</p>
+              </div>
+
+              <!-- Filter Pills & Search -->
+              <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
+                <button class="persona-pill active" id="ngoFilterPending" onclick="filterAdminNgoStatus('PENDING')">
+                  Pending Review
+                </button>
+                <button class="persona-pill" id="ngoFilterVerified" onclick="filterAdminNgoStatus('VERIFIED')">
+                  Verified
+                </button>
+                <button class="persona-pill" id="ngoFilterRejected" onclick="filterAdminNgoStatus('REJECTED')">
+                  Rejected
+                </button>
+                <button class="persona-pill" id="ngoFilterAll" onclick="filterAdminNgoStatus('ALL')">
+                  All Records
+                </button>
+                <input type="text" id="adminNgoSearchInput" placeholder="Search organization..." class="form-control" style="font-size: 0.85rem; width: 180px; padding: 0.35rem 0.6rem;" oninput="handleAdminNgoSearch(this.value)">
+              </div>
+            </div>
+
+            <!-- Verification Table -->
+            <div style="overflow-x: auto;">
+              <table class="custom-table" style="width: 100%;">
+                <thead>
+                  <tr>
+                    <th>Organization & Submitter</th>
+                    <th>Reg Number</th>
+                    <th>Cause & City</th>
+                    <th>Official Website</th>
+                    <th>Status</th>
+                    <th style="min-width: 170px;">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="adminNgosTbody">
+                  <tr><td colspan="6" style="text-align: center; padding: 2rem; color: var(--text-muted);">Loading verification queue...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===============================================================
+             TAB 3: SYSTEM AUDIT LOGS
+             =============================================================== -->
+        <div id="adminTabPaneAudit" style="display: none;">
+          <div style="background: #FFFFFF; border: 1px solid var(--border-light); border-radius: var(--radius-lg); padding: 1.5rem; box-shadow: var(--shadow-sm);">
+            
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.25rem;">
+              <div>
+                <h3 style="font-size: 1.2rem; color: var(--text-main); margin: 0 0 0.25rem 0;">
+                  <i class="fas fa-history" style="color: #2563EB;"></i> Platform Security & System Audit Trail
+                </h3>
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0;">Immutable logging of user authentication, financial transactions, administrative verifications, and security events.</p>
+              </div>
+
+              <!-- Export CSV Button -->
+              <div>
+                <button class="btn btn-sm btn-outline" onclick="exportAdminAuditLogsCSV()" title="Download CSV Export of current filtered logs">
+                  <i class="fas fa-file-csv" style="color: #10B981;"></i> Export CSV
+                </button>
+              </div>
+            </div>
+
+            <!-- Audit Filter Toolbar -->
+            <div style="background: var(--bg-secondary); border: 1px solid var(--border-light); border-radius: var(--radius-md); padding: 1rem; margin-bottom: 1.25rem; display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: center;">
+              <div style="flex-grow: 1; min-width: 180px;">
+                <input type="text" id="auditSearchInput" placeholder="Search actor, action, details, IP..." class="form-control" style="width: 100%; font-size: 0.85rem; padding: 0.45rem 0.65rem;">
+              </div>
+              <div style="min-width: 150px;">
+                <select id="auditActionFilter" class="form-control" style="width: 100%; font-size: 0.85rem; padding: 0.45rem 0.65rem;">
+                  <option value="ALL">All Event Types</option>
+                  <option value="LOGIN">User Login</option>
+                  <option value="LOGOUT">User Logout</option>
+                  <option value="SIGNUP">New Registration</option>
+                  <option value="VERIFY_NGO">NGO Verified</option>
+                  <option value="REJECT_NGO">NGO Rejected</option>
+                  <option value="SUSPEND_USER">User Suspended</option>
+                  <option value="RESTORE_USER">User Restored</option>
+                  <option value="DONATION">Donation Payment</option>
+                  <option value="ROLE_CHANGED">User Role Changed</option>
+                  <option value="RESOLVE_REPORT">Report Actioned</option>
+                </select>
+              </div>
+              <div>
+                <input type="date" id="auditStartDate" class="form-control" style="font-size: 0.85rem; padding: 0.45rem 0.65rem;" title="Start Date">
+              </div>
+              <div>
+                <input type="date" id="auditEndDate" class="form-control" style="font-size: 0.85rem; padding: 0.45rem 0.65rem;" title="End Date">
+              </div>
+              <div style="display: flex; gap: 0.35rem;">
+                <button class="btn btn-sm btn-primary" onclick="applyAuditFilters()">
+                  <i class="fas fa-filter"></i> Filter
+                </button>
+                <button class="btn btn-sm btn-secondary" onclick="resetAuditFilters()">
+                  Reset
+                </button>
+              </div>
+            </div>
+
+            <!-- Audit Logs Table -->
+            <div style="overflow-x: auto;">
+              <table class="custom-table" style="width: 100%;">
+                <thead>
+                  <tr>
+                    <th style="min-width: 140px;">Timestamp</th>
+                    <th>Action</th>
+                    <th>Actor / User</th>
+                    <th>Target Entity</th>
+                    <th style="min-width: 200px;">Details</th>
+                    <th>IP Address</th>
+                  </tr>
+                </thead>
+                <tbody id="adminAuditTbody">
+                  <tr><td colspan="6" style="text-align: center; padding: 2rem; color: var(--text-muted);">Loading audit logs...</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Audit Pagination Controls -->
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1.25rem; flex-wrap: wrap; gap: 0.75rem;">
+              <div style="font-size: 0.85rem; color: var(--text-muted);" id="auditPaginationInfo">
+                Showing 0 entries
+              </div>
+              <div style="display: flex; gap: 0.5rem; align-items: center;">
+                <button class="btn btn-sm btn-outline" id="auditPrevBtn" onclick="changeAuditPage(-1)" disabled>
+                  <i class="fas fa-chevron-left"></i> Previous
+                </button>
+                <span id="auditPageIndicator" style="font-size: 0.85rem; font-weight: 600; padding: 0 0.5rem;">Page 1 of 1</span>
+                <button class="btn btn-sm btn-outline" id="auditNextBtn" onclick="changeAuditPage(1)" disabled>
+                  Next <i class="fas fa-chevron-right"></i>
+                </button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- ===============================================================
+             TAB 4: LEADERBOARD
+             =============================================================== -->
+        <div id="adminTabPaneLeaderboard" style="display: none;">
+          <div style="background: #FFFFFF; border: 1px solid var(--border-light); border-radius: var(--radius-lg); padding: 1.5rem; box-shadow: var(--shadow-sm);">
+            
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.25rem;">
+              <div>
+                <h3 style="font-size: 1.2rem; color: var(--text-main); margin: 0 0 0.25rem 0;">
+                  <i class="fas fa-medal" style="color: #F59E0B;"></i> Platform Impact Leaderboard
+                </h3>
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0;">Rankings for top verified volunteer changemakers, generous philanthropic donors, and high-impact NGOs.</p>
+              </div>
+
+              <!-- Leaderboard Category Pills -->
+              <div style="display: flex; gap: 0.5rem;">
+                <button class="persona-pill active" id="leadCategoryVolunteers" onclick="switchLeaderboardCategory('volunteers')">
+                  <i class="fas fa-hands-helping"></i> Volunteers
+                </button>
+                <button class="persona-pill" id="leadCategoryDonors" onclick="switchLeaderboardCategory('donors')">
+                  <i class="fas fa-heart"></i> Donors
+                </button>
+                <button class="persona-pill" id="leadCategoryNgos" onclick="switchLeaderboardCategory('ngos')">
+                  <i class="fas fa-building"></i> NGOs
+                </button>
+              </div>
+            </div>
+
+            <!-- Leaderboard Content Area -->
+            <div id="adminLeaderboardContainer">
+              <div style="text-align: center; padding: 2.5rem; color: var(--text-muted);">
+                <i class="fas fa-spinner fa-spin fa-2x" style="color: var(--accent-green); margin-bottom: 0.75rem;"></i>
+                <p>Loading leaderboard rankings...</p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- ===============================================================
+             TAB 5: USER MANAGEMENT
+             =============================================================== -->
+        <div id="adminTabPaneUsers" style="display: none;">
+          <div style="background: #FFFFFF; border: 1px solid var(--border-light); border-radius: var(--radius-lg); padding: 1.5rem; box-shadow: var(--shadow-sm); overflow-x: auto;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.75rem;">
+              <div>
+                <h3 style="font-size: 1.15rem; color: var(--text-main); margin: 0 0 0.25rem 0;">User Account Management</h3>
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0;">View active accounts, review roles, and manage suspensions. (Requires Admin Password re-entry)</p>
+              </div>
+              <input type="text" id="adminUserSearchInput" placeholder="Search by name or email..." class="form-control" style="max-width: 260px; font-size: 0.85rem;" oninput="filterAdminUsers(this.value)">
+            </div>
+
+            <table class="custom-table" style="width: 100%;">
+              <thead>
+                <tr>
+                  <th>User Details</th>
+                  <th>Assigned Role</th>
+                  <th>Location</th>
+                  <th>Status</th>
+                  <th>Registered</th>
+                  <th>Account Actions</th>
+                </tr>
+              </thead>
+              <tbody id="adminUsersTbody">
+                <tr><td colspan="6" style="text-align: center; padding: 2rem; color: var(--text-muted);">Loading user records...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- ===============================================================
+             TAB 6: REPORTED CONTENT
+             =============================================================== -->
+        <div id="adminTabPaneReports" style="display: none;">
+          <div style="background: #FFFFFF; border: 1px solid var(--border-light); border-radius: var(--radius-lg); padding: 1.5rem; box-shadow: var(--shadow-sm); overflow-x: auto;">
+            <div style="margin-bottom: 1rem;">
+              <h3 style="font-size: 1.15rem; color: var(--text-main); margin: 0 0 0.25rem 0;">Flagged Content & Reports</h3>
+              <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0;">Community reports submitted for campaigns, drives, or NGO activity.</p>
+            </div>
+
+            <table class="custom-table" style="width: 100%;">
+              <thead>
+                <tr>
+                  <th>Timestamp</th>
+                  <th>Target Type</th>
+                  <th>Target ID</th>
+                  <th>Reason</th>
+                  <th>Details</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="adminReportsTbody">
+                <tr><td colspan="6" style="text-align: center; padding: 2rem; color: var(--text-muted);">No flagged content reported.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <!-- ===================================================================
+       MODAL 1: CREATE CAMPAIGN MODAL (NGO ONLY)
+       =================================================================== -->
+  <div class="modal-backdrop" id="createCampaignModal">
+    <div class="modal-card" style="max-width: 540px;">
+      <div class="modal-header">
+        <h3 style="font-size: 1.2rem; color: var(--text-main);"><i class="fas fa-bullhorn" style="color: var(--accent-green);"></i> Create Fundraising Campaign</h3>
+        <button class="modal-close-btn" onclick="closeModal('createCampaignModal')">&times;</button>
+      </div>
+      <form id="createCampaignForm">
+        <div class="modal-body">
+          <div class="form-group" style="margin-bottom: 1rem;">
+            <label style="font-weight: 600; font-size: 0.88rem; display: block; margin-bottom: 0.3rem;">Campaign Title *</label>
+            <input type="text" class="form-control" id="campTitle" placeholder="e.g. Clean Riverbed & Native Tree Nursery" required style="width: 100%; padding: 0.6rem 0.8rem;">
+          </div>
+          
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+            <div>
+              <label style="font-weight: 600; font-size: 0.88rem; display: block; margin-bottom: 0.3rem;">Cause Category *</label>
+              <select class="form-control" id="campCategory" style="width: 100%; padding: 0.6rem 0.8rem;">
+                <option value="Environment">Environment</option>
+                <option value="Education">Education</option>
+                <option value="Healthcare">Healthcare</option>
+                <option value="Animal Welfare">Animal Welfare</option>
+                <option value="Child Welfare">Child Welfare</option>
+              </select>
+            </div>
+            <div>
+              <label style="font-weight: 600; font-size: 0.88rem; display: block; margin-bottom: 0.3rem;">Target Amount (₹) *</label>
+              <input type="number" class="form-control" id="campTarget" placeholder="100000" min="1000" step="500" required style="width: 100%; padding: 0.6rem 0.8rem;">
+            </div>
+          </div>
+
+          <div class="form-group" style="margin-bottom: 1rem;">
+            <label style="font-weight: 600; font-size: 0.88rem; display: block; margin-bottom: 0.3rem;">Location (City & Region) *</label>
+            <input type="text" class="form-control" id="campLocation" placeholder="e.g. Pune, Maharashtra" required style="width: 100%; padding: 0.6rem 0.8rem;">
+          </div>
+
+          <div class="form-group" style="margin-bottom: 1.25rem;">
+            <label style="font-weight: 600; font-size: 0.88rem; display: block; margin-bottom: 0.3rem;">Project Description & Expected Deliverables *</label>
+            <textarea class="form-control" id="campDesc" rows="3" placeholder="Explain the community need and what contributions will provide..." required style="width: 100%; padding: 0.6rem 0.8rem; font-size: 0.9rem;"></textarea>
+          </div>
+        </div>
+
+        <div class="modal-footer" style="display: flex; justify-content: flex-end; gap: 0.75rem;">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('createCampaignModal')">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="createCampSubmitBtn">
+            <i class="fas fa-plus-circle"></i> Publish Campaign
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ===================================================================
+       MODAL 2: CREATE OPPORTUNITY MODAL (NGO ONLY)
+       =================================================================== -->
+  <div class="modal-backdrop" id="createOpportunityModal">
+    <div class="modal-card" style="max-width: 540px;">
+      <div class="modal-header">
+        <h3 style="font-size: 1.2rem; color: var(--text-main);"><i class="fas fa-calendar-plus" style="color: var(--accent-green);"></i> Schedule Volunteer Drive</h3>
+        <button class="modal-close-btn" onclick="closeModal('createOpportunityModal')">&times;</button>
+      </div>
+      <form id="createOpportunityForm">
+        <div class="modal-body">
+          <div class="form-group" style="margin-bottom: 1rem;">
+            <label style="font-weight: 600; font-size: 0.88rem; display: block; margin-bottom: 0.3rem;">Drive Title *</label>
+            <input type="text" class="form-control" id="oppTitle" placeholder="e.g. Weekend Native Tree Plantation" required style="width: 100%; padding: 0.6rem 0.8rem;">
+          </div>
+          
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+            <div>
+              <label style="font-weight: 600; font-size: 0.88rem; display: block; margin-bottom: 0.3rem;">Cause Category *</label>
+              <select class="form-control" id="oppCategory" style="width: 100%; padding: 0.6rem 0.8rem;">
+                <option value="Environment">Environment</option>
+                <option value="Education">Education</option>
+                <option value="Healthcare">Healthcare</option>
+                <option value="Animal Welfare">Animal Welfare</option>
+                <option value="Child Welfare">Child Welfare</option>
+              </select>
+            </div>
+            <div>
+              <label style="font-weight: 600; font-size: 0.88rem; display: block; margin-bottom: 0.3rem;">Event Date *</label>
+              <input type="date" class="form-control" id="oppDate" required style="width: 100%; padding: 0.6rem 0.8rem;">
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+            <div>
+              <label style="font-weight: 600; font-size: 0.88rem; display: block; margin-bottom: 0.3rem;">Volunteers Needed *</label>
+              <input type="number" class="form-control" id="oppNeeded" placeholder="25" min="1" required style="width: 100%; padding: 0.6rem 0.8rem;">
+            </div>
+            <div>
+              <label style="font-weight: 600; font-size: 0.88rem; display: block; margin-bottom: 0.3rem;">Duration</label>
+              <input type="text" class="form-control" id="oppDuration" placeholder="4 hrs" value="4 hrs" style="width: 100%; padding: 0.6rem 0.8rem;">
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+            <div>
+              <label style="font-weight: 600; font-size: 0.88rem; display: block; margin-bottom: 0.3rem;">Location *</label>
+              <input type="text" class="form-control" id="oppLocation" placeholder="Mutha Riverbank, Pune" required style="width: 100%; padding: 0.6rem 0.8rem;">
+            </div>
+            <div>
+              <label style="font-weight: 600; font-size: 0.88rem; display: block; margin-bottom: 0.3rem;">Skill Requirement</label>
+              <select class="form-control" id="oppSkill" style="width: 100%; padding: 0.6rem 0.8rem;">
+                <option value="All Welcome">All Welcome (No experience required)</option>
+                <option value="Intermediate">Intermediate (Basic teaching/field skills)</option>
+                <option value="Specialized">Specialized (Medical/Technical skills)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group" style="margin-bottom: 1.25rem;">
+            <label style="font-weight: 600; font-size: 0.88rem; display: block; margin-bottom: 0.3rem;">Description & Volunteer Tasks *</label>
+            <textarea class="form-control" id="oppDesc" rows="3" placeholder="Describe the day's schedule, equipment provided, and instructions..." required style="width: 100%; padding: 0.6rem 0.8rem; font-size: 0.9rem;"></textarea>
+          </div>
+        </div>
+
+        <div class="modal-footer" style="display: flex; justify-content: flex-end; gap: 0.75rem;">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('createOpportunityModal')">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="createOppSubmitBtn">
+            <i class="fas fa-plus-circle"></i> Publish Drive
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ===================================================================
+       MODAL 3: ACCOUNT SETTINGS & PRIVACY
+       =================================================================== -->
+  <div class="modal-backdrop" id="accountSettingsModal">
+    <div class="modal-card" style="max-width: 580px;">
+      <div class="modal-header">
+        <h3 style="font-size: 1.25rem; color: var(--text-main);"><i class="fas fa-user-cog" style="color: var(--accent-green);"></i> Account Settings & Privacy</h3>
+        <button class="modal-close-btn" onclick="closeModal('accountSettingsModal')">&times;</button>
+      </div>
+      <div class="modal-body" style="padding-top: 0.5rem;">
+        
+        <!-- Settings Sub-tabs -->
+        <div style="display: flex; gap: 0.5rem; border-bottom: 1px solid var(--border-light); margin-bottom: 1.25rem;">
+          <button class="admin-tab-btn active" id="settingsTabBtnProfile" onclick="switchSettingsTab('profile')">Profile</button>
+          <button class="admin-tab-btn" id="settingsTabBtnSecurity" onclick="switchSettingsTab('security')">Security</button>
+          <button class="admin-tab-btn" id="settingsTabBtnData" onclick="switchSettingsTab('data')">Data & Privacy</button>
+        </div>
+
+        <!-- Section 1: Profile -->
+        <div id="settingsPaneProfile">
+          <form id="settingsProfileForm">
+            <div class="form-group" style="margin-bottom: 1rem;">
+              <label style="font-weight: 600; font-size: 0.85rem; display: block; margin-bottom: 0.3rem;">Full Name *</label>
+              <input type="text" class="form-control" id="settingsFullName" required style="width: 100%;">
+            </div>
+            <div class="form-group" style="margin-bottom: 1rem;">
+              <label style="font-weight: 600; font-size: 0.85rem; display: block; margin-bottom: 0.3rem;">City / Location *</label>
+              <input type="text" class="form-control" id="settingsCity" required style="width: 100%;">
+            </div>
+            <div class="form-group" style="margin-bottom: 1rem;">
+              <label style="font-weight: 600; font-size: 0.85rem; display: block; margin-bottom: 0.3rem;">Bio / Core Skills</label>
+              <textarea class="form-control" id="settingsBio" rows="2" style="width: 100%;"></textarea>
+            </div>
+            <div class="form-group" style="margin-bottom: 1.25rem;">
+              <label style="font-weight: 600; font-size: 0.85rem; display: block; margin-bottom: 0.3rem;">Avatar Image URL</label>
+              <input type="url" class="form-control" id="settingsAvatar" placeholder="https://..." style="width: 100%;">
+            </div>
+            <button type="submit" class="btn btn-primary" id="saveProfileBtn">
+              <i class="fas fa-save"></i> Save Profile Details
+            </button>
+          </form>
+        </div>
+
+        <!-- Section 2: Security & Password -->
+        <div id="settingsPaneSecurity" style="display: none;">
+          <form id="settingsPasswordForm" style="margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border-light);">
+            <h4 style="font-size: 1rem; margin: 0 0 0.75rem 0;">Change Account Password</h4>
+            <div class="form-group" style="margin-bottom: 0.75rem;">
+              <label style="font-weight: 600; font-size: 0.85rem; display: block; margin-bottom: 0.3rem;">Current Password *</label>
+              <input type="password" class="form-control" id="settingsCurrentPassword" required style="width: 100%;">
+            </div>
+            <div class="form-group" style="margin-bottom: 0.75rem;">
+              <label style="font-weight: 600; font-size: 0.85rem; display: block; margin-bottom: 0.3rem;">New Password (Min. 8 chars, 1 letter & 1 number) *</label>
+              <input type="password" class="form-control" id="settingsNewPassword" required style="width: 100%;">
+            </div>
+            <button type="submit" class="btn btn-primary" id="changePassBtn">
+              <i class="fas fa-key"></i> Update Password
+            </button>
+          </form>
+
+          <form id="settingsEmailForm" style="margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border-light);">
+            <h4 style="font-size: 1rem; margin: 0 0 0.35rem 0;">Change Email Address</h4>
+            <p style="font-size: 0.8rem; color: #B45309; margin: 0 0 0.75rem 0;"><i class="fas fa-info-circle"></i> Changing email will require re-verifying before you can donate or host drives.</p>
+            <div class="form-group" style="margin-bottom: 0.75rem;">
+              <label style="font-weight: 600; font-size: 0.85rem; display: block; margin-bottom: 0.3rem;">New Email Address *</label>
+              <input type="email" class="form-control" id="settingsNewEmail" required style="width: 100%;">
+            </div>
+            <button type="submit" class="btn btn-outline" id="changeEmailBtn">
+              <i class="fas fa-envelope"></i> Request Email Update
+            </button>
+          </form>
+
+          <div>
+            <h4 style="font-size: 1rem; margin: 0 0 0.35rem 0;">Active Devices</h4>
+            <p style="font-size: 0.8rem; color: var(--text-muted); margin: 0 0 0.75rem 0;">Revoke sessions on all browsers and devices.</p>
+            <button type="button" class="btn btn-outline" onclick="window.handleLogoutAllDevices()" style="color: #DC2626; border-color: #FCA5A5;">
+              <i class="fas fa-sign-out-alt"></i> Log Out of All Devices
+            </button>
+          </div>
+        </div>
+
+        <!-- Section 3: Data & Privacy -->
+        <div id="settingsPaneData" style="display: none;">
+          <div style="margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border-light);">
+            <h4 style="font-size: 1rem; margin: 0 0 0.35rem 0;">Download My Data</h4>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0 0 0.75rem 0;">Export a comprehensive JSON copy of your profile, registrations, hours, and donations.</p>
+            <button type="button" class="btn btn-outline" onclick="window.handleExportData()">
+              <i class="fas fa-download"></i> Export Data (JSON)
+            </button>
+          </div>
+
+          <div style="background: #FEF2F2; border: 1px solid #FCA5A5; border-radius: var(--radius-md); padding: 1.15rem;">
+            <h4 style="font-size: 1rem; color: #991B1B; margin: 0 0 0.35rem 0;">Delete Account</h4>
+            <p style="font-size: 0.82rem; color: #7F1D1D; margin: 0 0 0.75rem 0;">Permanently delete your profile and account. Completed Section 80G tax donations will be anonymized for legal audit compliance.</p>
+            <button type="button" class="btn btn-sm" onclick="window.handleDeleteAccountPrompt()" style="background: #DC2626; color: #FFF; border: none; font-weight: 600;">
+              <i class="fas fa-trash-alt"></i> Delete My Account
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================================================================
+       MODAL 4: ADMIN SENSITIVE ACTION (PASSWORD CONFIRMATION)
+       =================================================================== -->
+  <div class="modal-backdrop" id="adminPasswordModal">
+    <div class="modal-card" style="max-width: 440px;">
+      <div class="modal-header">
+        <h3 style="font-size: 1.15rem; color: var(--text-main);"><i class="fas fa-shield-alt" style="color: #2563EB;"></i> Confirm Admin Credentials</h3>
+        <button class="modal-close-btn" onclick="closeModal('adminPasswordModal')">&times;</button>
+      </div>
+      <form id="adminPasswordConfirmForm">
+        <div class="modal-body">
+          <p id="adminActionDescription" style="font-size: 0.88rem; color: var(--text-muted); margin: 0 0 1rem 0;">
+            Re-enter your admin password to execute this sensitive management operation.
+          </p>
+          <div class="form-group" style="margin-bottom: 1rem;">
+            <label style="font-weight: 600; font-size: 0.85rem; display: block; margin-bottom: 0.35rem;">Admin Password *</label>
+            <input type="password" id="adminConfirmPassInput" class="form-control" required placeholder="Enter your current password" style="width: 100%;">
+          </div>
+          <div id="adminRejectReasonGroup" style="display: none; margin-bottom: 1rem;">
+            <label style="font-weight: 600; font-size: 0.85rem; display: block; margin-bottom: 0.35rem;">Reason for Rejection / Suspension *</label>
+            <textarea id="adminReasonInput" class="form-control" rows="2" placeholder="Explain the rationale for this action..." style="width: 100%;"></textarea>
+          </div>
+        </div>
+        <div class="modal-footer" style="display: flex; justify-content: flex-end; gap: 0.75rem;">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('adminPasswordModal')">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="adminConfirmActionBtn">Confirm Action</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="site-footer" style="padding: 2.5rem 0; background: #FFFFFF; border-top: 1px solid var(--border-light); margin-top: auto;">
+    <div class="container" style="text-align: center; font-size: 0.85rem; color: var(--text-muted);">
+      &copy; 2026 ImpactHub. Connecting NGOs, Donors, and Volunteers for Verifiable Social Impact.
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/api.js"></script>
+  <script src="js/store.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/dashboard.js"></script>
+</body>
+</html>

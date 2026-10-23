@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Campaigns & Donations — ImpactHub</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap"
+    rel="stylesheet">
+
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+
+<body>
+
+  <!-- Site Header -->
+  <header class="site-header">
+    <div class="container nav-container">
+      <a href="index.html" class="brand-logo" style="text-decoration: none;">
+        <div class="brand-logo-svg">
+          <svg viewBox="0 0 24 24">
+            <path
+              d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+          </svg>
+        </div>
+        <div class="brand-text-wrap" style="margin-left: 0.6rem;">
+          Impact<span class="hub-accent">Hub</span>
+        </div>
+      </a>
+
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="campaigns.html" class="active">Campaigns</a></li>
+        <li><a href="ngos.html">NGO Directory</a></li>
+        <li><a href="volunteer.html">Volunteer</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <li><a href="dashboard.html">Dashboard</a></li>
+      </ul>
+
+      <div class="nav-actions">
+        <button class="mobile-menu-btn" aria-label="Toggle menu"><i class="fas fa-bars"></i></button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Banner -->
+  <section class="section-pale" style="padding: 4rem 0 3rem 0;">
+    <div class="container">
+      <div class="section-header" style="margin-bottom: 0;">
+        <div class="section-badge"><i class="fas fa-heart"></i> Transparent Philanthropy</div>
+        <h2>Support Verified Causes That Matter</h2>
+        <p>Directly fund verified community initiatives with full financial transparency, live progress tracking, and
+          instant verifiable receipts.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Campaigns Section -->
+  <section style="padding: 3rem 0 5rem 0;">
+    <div class="container">
+
+      <!-- Search, Sort & Filters Bar -->
+      <div class="filter-bar" style="display: flex; flex-direction: column; gap: 1.25rem; align-items: stretch;">
+        <div style="display: flex; gap: 1rem; flex-wrap: wrap; justify-content: space-between; align-items: center;">
+          <div class="search-input-wrap" style="max-width: 500px; flex-grow: 1;">
+            <i class="fas fa-search"></i>
+            <input type="text" id="campaignSearchInput" placeholder="Search campaigns by title, NGO, or cause...">
+          </div>
+
+          <div style="display: flex; align-items: center; gap: 0.65rem;">
+            <label for="campaignSortSelect"
+              style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted); white-space: nowrap;">
+              <i class="fas fa-sort-amount-down"></i> Sort By:
+            </label>
+            <select class="form-control" id="campaignSortSelect"
+              style="width: auto; padding: 0.5rem 1rem; font-size: 0.88rem;">
+              <option value="urgent">Most Urgent (Fewest Days Left)</option>
+              <option value="funded">Most Funded (%)</option>
+              <option value="goal">Goal Amount (High to Low)</option>
+              <option value="supporters">Most Supporters</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Filter Chips -->
+        <div class="filter-chips" id="campaignFilterChips">
+          <button class="filter-chip active" data-category="all">All Causes</button>
+          <button class="filter-chip" data-category="Education">📚 Education</button>
+          <button class="filter-chip" data-category="Environment">🌳 Environment</button>
+          <button class="filter-chip" data-category="Healthcare">🩺 Healthcare</button>
+          <button class="filter-chip" data-category="Animal Welfare">🐾 Animal Welfare</button>
+          <button class="filter-chip" data-category="Women Empowerment">👩 Women Empowerment</button>
+        </div>
+      </div>
+
+      <!-- Demonstration Notice -->
+      <div
+        style="background: var(--bg-primary); border: 1px solid var(--border-light); border-radius: var(--radius-md); padding: 0.85rem 1.25rem; margin-bottom: 2rem; font-size: 0.84rem; color: var(--text-muted); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;">
+        <span><i class="fas fa-info-circle" style="color: var(--accent-green);"></i> <strong>Demonstration
+            Mode:</strong> Contributions are simulated for functional evaluation. No bank accounts or payment cards are
+          debited.</span>
+        <span style="font-weight: 700; color: var(--text-main);"><i class="fas fa-shield-alt"
+            style="color: var(--accent-green);"></i> Audited Demonstration Ledger</span>
+      </div>
+
+      <!-- Campaigns Grid -->
+      <div class="cards-grid" id="campaignsGrid">
+        <!-- Rendered dynamically -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Donation Impact Calculator Section -->
+  <section class="section-pale" style="padding: 4.5rem 0;">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-badge"><i class="fas fa-calculator"></i> Impact Estimator</div>
+        <h2>See Your Contribution's Exact Reach</h2>
+        <p>Know exactly how your simulated donation transforms into physical goods and services for communities.</p>
+      </div>
+
+      <div class="calc-card">
+        <div class="calc-grid">
+          <div>
+            <h3 style="margin-bottom: 0.5rem;">Select Contribution Amount</h3>
+            <p style="margin-bottom: 1.25rem;">Choose a tier or use the interactive slider:</p>
+
+            <div class="calc-amount-presets">
+              <button class="amount-btn amount-preset-btn" data-amount="100">₹100</button>
+              <button class="amount-btn amount-preset-btn" data-amount="500">₹500</button>
+              <button class="amount-btn amount-preset-btn active" data-amount="1000">₹1,000</button>
+              <button class="amount-btn amount-preset-btn" data-amount="5000">₹5,000</button>
+            </div>
+
+            <div class="calc-slider-wrap">
+              <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                <span style="font-weight: 600; font-size: 0.9rem;">Selected Amount:</span>
+                <span id="calcAmountDisplay"
+                  style="font-weight: 800; font-size: 1.15rem; color: var(--accent-green);">₹1,000</span>
+              </div>
+              <input type="range" class="calc-slider" id="calcSlider" min="100" max="10000" step="100" value="1000">
+            </div>
+
+            <button class="btn btn-lg btn-green" id="calcDonateBtn" style="width: 100%; margin-top: 1rem;">
+              <i class="fas fa-hand-holding-heart"></i> Contribute This Amount (Simulated)
+            </button>
+          </div>
+
+          <!-- Dynamic Impact Card -->
+          <div class="impact-preview-box">
+            <div class="impact-preview-header">
+              <span
+                style="font-size: 0.85rem; text-transform: uppercase; color: var(--text-muted); font-weight: 600;">Tangible
+                Deliverables</span>
+              <h3>Your <span id="dynamicHeadingAmount" style="color: var(--accent-green);">₹1,000</span> Delivers:</h3>
+            </div>
+            <ul class="impact-items-list" id="impactItemsList">
+              <!-- Rendered dynamically by calculator.js -->
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Support This Cause / Simulated Donation Modal -->
+  <div class="modal-backdrop" id="donationModal" role="dialog" aria-modal="true" aria-labelledby="modalCampTitle">
+    <div class="modal-card" style="max-width: 600px;">
+      <div class="modal-header" style="align-items: flex-start; padding-bottom: 0.85rem;">
+        <div style="display: flex; gap: 0.85rem; align-items: center;">
+          <img id="modalCampImg" src="assets/images/fallback-banner.svg" alt="Campaign Banner"
+            onerror="this.onerror=null; this.src='assets/images/fallback-banner.svg';"
+            style="width: 72px; height: 72px; border-radius: var(--radius-md); object-fit: cover; border: 1.5px solid var(--border-light); flex-shrink: 0;">
+          <div>
+            <h3 id="modalCampTitle" style="font-size: 1.15rem; line-height: 1.35; margin-bottom: 0.25rem;">Support This
+              Cause</h3>
+            <span id="modalCampNgo"
+              style="font-size: 0.84rem; color: var(--accent-green); font-weight: 600; display: block;">Beneficiary
+              NGO</span>
+            <span id="modalCampProgressNote" style="font-size: 0.76rem; color: var(--text-muted);">Verified Community
+              Initiative</span>
+          </div>
+        </div>
+        <button class="modal-close-btn" onclick="closeModal('donationModal')" aria-label="Close modal">&times;</button>
+      </div>
+
+      <form id="donationForm" novalidate>
+        <div class="modal-body" style="padding-top: 0.5rem;">
+          <input type="hidden" id="donCampId">
+
+          <!-- Demo Disclaimer Alert -->
+          <div
+            style="background: var(--accent-green-light); border: 1px solid var(--accent-green); padding: 0.75rem 1rem; border-radius: var(--radius-md); font-size: 0.82rem; color: var(--accent-green); margin-bottom: 1.25rem; display: flex; align-items: flex-start; gap: 0.65rem;">
+            <i class="fas fa-flask" style="font-size: 1.15rem; margin-top: 0.1rem; flex-shrink: 0;"></i>
+            <div>
+              <strong>Demonstration Mode / Simulated Donation:</strong> This contribution is simulated for CEP
+              functional evaluation. No bank accounts, credit/debit cards, or UPI PINs are processed or charged.
+            </div>
+          </div>
+
+          <!-- Donation Amount Selector -->
+          <div style="margin-bottom: 1.15rem;">
+            <label style="font-size: 0.88rem; font-weight: 600; margin-bottom: 0.45rem; display: block;">Select
+              Contribution Amount (₹) *</label>
+            <div class="calc-amount-presets"
+              style="margin: 0.35rem 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.5rem;">
+              <button type="button" class="amount-btn don-tier-btn" data-val="100">₹100</button>
+              <button type="button" class="amount-btn don-tier-btn" data-val="500">₹500</button>
+              <button type="button" class="amount-btn don-tier-btn active" data-val="1000">₹1,000</button>
+              <button type="button" class="amount-btn don-tier-btn" data-val="2000">₹2,000</button>
+            </div>
+          </div>
+
+          <!-- Custom Amount Input -->
+          <div class="form-group" style="margin-bottom: 1rem;">
+            <label for="customDonAmount" style="font-size: 0.85rem; font-weight: 600;">Or Enter Custom Amount (₹)
+              *</label>
+            <div style="position: relative;">
+              <span
+                style="position: absolute; left: 0.85rem; top: 50%; transform: translateY(-50%); font-weight: 700; color: var(--text-muted);">₹</span>
+              <input type="number" class="form-control" id="customDonAmount" value="1000" min="10" max="500000"
+                style="padding-left: 2rem;" placeholder="e.g. 1500" required>
+            </div>
+            <div class="field-error-msg" id="amountError"
+              style="color: #dc2626; font-size: 0.78rem; margin-top: 0.25rem; display: none;"></div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.85rem; margin-bottom: 0.5rem;">
+            <!-- Donor Name -->
+            <div class="form-group" style="margin-bottom: 0.75rem;">
+              <label for="donorName" style="font-size: 0.85rem; font-weight: 600;">Donor Full Name *</label>
+              <input type="text" class="form-control" id="donorName" placeholder="Enter your full name" required>
+              <div class="field-error-msg" id="nameError"
+                style="color: #dc2626; font-size: 0.78rem; margin-top: 0.25rem; display: none;"></div>
+            </div>
+
+            <!-- Mobile Number -->
+            <div class="form-group" style="margin-bottom: 0.75rem;">
+              <label for="donorPhone" style="font-size: 0.85rem; font-weight: 600;">Mobile Number *</label>
+              <input type="tel" class="form-control" id="donorPhone" placeholder="10-digit mobile number" required>
+              <div class="field-error-msg" id="phoneError"
+                style="color: #dc2626; font-size: 0.78rem; margin-top: 0.25rem; display: none;"></div>
+            </div>
+          </div>
+
+          <!-- Donor Email -->
+          <div class="form-group" style="margin-bottom: 0.85rem;">
+            <label for="donorEmail" style="font-size: 0.85rem; font-weight: 600;">Email Address (For Instant Receipt &
+              Updates) *</label>
+            <input type="email" class="form-control" id="donorEmail" placeholder="your.email@example.com" required>
+            <div class="field-error-msg" id="emailError"
+              style="color: #dc2626; font-size: 0.78rem; margin-top: 0.25rem; display: none;"></div>
+          </div>
+
+          <!-- Optional Message for NGO -->
+          <div class="form-group" style="margin-bottom: 1rem;">
+            <label for="donorMessage" style="font-size: 0.85rem; font-weight: 600;">Message for the NGO
+              (Optional)</label>
+            <textarea class="form-control" id="donorMessage" rows="2"
+              placeholder="Share a few words of motivation, dedication, or solidarity..."></textarea>
+          </div>
+
+          <!-- Summary Box -->
+          <div
+            style="background: var(--bg-primary); border: 1px solid var(--border-light); padding: 0.85rem 1rem; border-radius: var(--radius-md); font-size: 0.85rem; margin-bottom: 1rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
+              <span>Simulated Contribution:</span>
+              <strong id="donSummaryAmount" style="color: var(--accent-green); font-size: 1.15rem;">₹1,000</strong>
+            </div>
+            <div style="display: flex; justify-content: space-between; font-size: 0.78rem; color: var(--text-muted);">
+              <span>Direct NGO Allocation:</span>
+              <span>100% (Zero platform fee / Net to NGO)</span>
+            </div>
+          </div>
+
+          <!-- Checkbox to acknowledge demonstration mode -->
+          <div
+            style="margin-bottom: 0.5rem; background: rgba(0,0,0,0.02); padding: 0.75rem; border-radius: var(--radius-sm); border: 1px solid var(--border-light);">
+            <label
+              style="display: flex; align-items: flex-start; gap: 0.65rem; font-size: 0.82rem; color: var(--text-main); cursor: pointer; margin: 0;">
+              <input type="checkbox" id="demoAcknowledge"
+                style="margin-top: 0.15rem; width: 16px; height: 16px; accent-color: var(--accent-green);" required>
+              <span>I acknowledge that this is a <strong>simulated demonstration contribution</strong> for evaluation
+                purposes. No real bank accounts or payment cards will be charged.</span>
+            </label>
+            <div class="field-error-msg" id="demoError"
+              style="color: #dc2626; font-size: 0.78rem; margin-top: 0.35rem; display: none;"></div>
+          </div>
+        </div>
+
+        <div class="modal-footer" style="display: flex; justify-content: flex-end; gap: 0.75rem;">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('donationModal')">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="confirmDonationBtn">
+            <i class="fas fa-heart"></i> Submit Donation
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Site Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col" style="max-width: 340px;">
+          <a href="index.html" class="brand-logo"
+            style="text-decoration: none; margin-bottom: 0.85rem; display: inline-flex;">
+            <div class="brand-logo-svg" style="background: rgba(255,255,255,0.15);">
+              <svg viewBox="0 0 24 24">
+                <path
+                  d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
+                  fill="#FFFFFF" />
+              </svg>
+            </div>
+            <div class="brand-text-wrap" style="color: #FFFFFF; margin-left: 0.6rem;">
+              Impact<span style="color: #86EFAC;">Hub</span>
+            </div>
+          </a>
+          <p style="font-size: 0.88rem; line-height: 1.6; color: #9CA3AF; margin-bottom: 1rem;">
+            A transparent platform connecting non-governmental organizations, donors, and volunteers to create
+            verifiable social progress.
+          </p>
+          <div
+            style="font-size: 0.78rem; color: #9CA3AF; background: rgba(255,255,255,0.06); padding: 0.6rem 0.85rem; border-radius: var(--radius-sm); border: 1px solid rgba(255,255,255,0.1);">
+            <i class="fas fa-flask" style="color: #86EFAC; margin-right: 0.35rem;"></i>
+            <strong>Evaluation Environment:</strong> Simulated contributions and activity tracking for functional
+            demonstration.
+          </div>
+        </div>
+
+        <div class="footer-col">
+          <h4>Platform</h4>
+          <ul class="footer-links">
+            <li><a href="campaigns.html">Active Campaigns</a></li>
+            <li><a href="ngos.html">NGO Directory</a></li>
+            <li><a href="volunteer.html">Volunteer Drives</a></li>
+            <li><a href="dashboard.html">Role Dashboard</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Accounts</h4>
+          <ul class="footer-links">
+            <li><a href="login.html">Sign In</a></li>
+            <li><a href="signup.html">Create Account</a></li>
+            <li><a href="about.html">About Platform</a></li>
+            <li><a href="contact.html">Contact & Support</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Trust & Ethics</h4>
+          <ul class="footer-links">
+            <li><a href="impact.html">Impact Verification</a></li>
+            <li><a href="about.html">Financial Transparency</a></li>
+            <li><a href="contact.html">Community Guidelines</a></li>
+            <li><a href="about.html#governance">NGO Due Diligence</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <span>&copy; 2026 ImpactHub. All rights reserved.</span>
+        <span>Transparent Philanthropy & Community Mobilization Platform</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/api.js"></script>
+  <script src="js/store.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/calculator.js"></script>
+  <script>
+    let currentCategory = 'all';
+    let searchQuery = '';
+    let currentSort = 'urgent';
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const ngoParam = urlParams.get('ngo');
+      const campParam = urlParams.get('campaign');
+
+      if (ngoParam) {
+        searchQuery = ngoParam;
+        const sInput = document.getElementById('campaignSearchInput');
+        if (sInput) sInput.value = ngoParam;
+      }
+
+      renderCampaigns();
+      setupFilters();
+      setupDonationFlow();
+
+      if (campParam) {
+        setTimeout(() => {
+          openDonationModal(campParam);
+        }, 200);
+      }
+
+      window.addEventListener('hc:data-reset', () => {
+        renderCampaigns();
+      });
+    });
+
+    async function renderCampaigns() {
+      const grid = document.getElementById('campaignsGrid');
+      if (!grid) return;
+
+      let campaigns = [];
+      try {
+        if (window.ImpactHubAPI) {
+          campaigns = await window.ImpactHubAPI.getCampaigns();
+        }
+      } catch (e) { }
+
+      if (!campaigns || campaigns.length === 0) {
+        campaigns = window.HCStore ? window.HCStore.getCampaigns() : [];
+      }
+      currentCampaignsList = campaigns;
+
+      let filtered = campaigns.filter(c => {
+        const cat = (c.category || c.cause || '').toLowerCase();
+        const matchesCategory = currentCategory === 'all' || cat === currentCategory.toLowerCase();
+        const q = (searchQuery || '').trim().toLowerCase();
+        const matchesSearch = !q ||
+          ((c.title || '').toLowerCase().includes(q)) ||
+          (((c.ngoName || c.ngo_name || '')).toLowerCase().includes(q)) ||
+          (((c.location || '')).toLowerCase().includes(q)) ||
+          (((c.description || '')).toLowerCase().includes(q));
+        return matchesCategory && matchesSearch;
+      });
+
+      // Sorting
+      if (currentSort === 'urgent') {
+        filtered.sort((a, b) => (a.daysLeft || 30) - (b.daysLeft || 30));
+      } else if (currentSort === 'funded') {
+        filtered.sort((a, b) => {
+          const raisedA = a.raised !== undefined ? a.raised : (a.raised_amount || 0);
+          const goalA = a.goal !== undefined ? a.goal : (a.target_amount || 1);
+          const raisedB = b.raised !== undefined ? b.raised : (b.raised_amount || 0);
+          const goalB = b.goal !== undefined ? b.goal : (b.target_amount || 1);
+          return (raisedB / goalB) - (raisedA / goalA);
+        });
+      } else if (currentSort === 'goal') {
+        filtered.sort((a, b) => {
+          const goalA = a.goal !== undefined ? a.goal : (a.target_amount || 0);
+          const goalB = b.goal !== undefined ? b.goal : (b.target_amount || 0);
+          return goalB - goalA;
+        });
+      } else if (currentSort === 'supporters') {
+        filtered.sort((a, b) => {
+          const suppA = a.supporters !== undefined ? a.supporters : (a.supporters_count || 0);
+          const suppB = b.supporters !== undefined ? b.supporters : (b.supporters_count || 0);
+          return suppB - suppA;
+        });
+      }
+
+      if (filtered.length === 0) {
+        grid.innerHTML = `
+          <div style="grid-column: 1 / -1;">
+            <div class="empty-state-box">
+              <div class="empty-state-icon"><i class="fas fa-hand-holding-heart"></i></div>
+              <h3>No Campaigns Found</h3>
+              <p style="font-size: 0.95rem; margin-bottom: 1.25rem;">No causes match "${window.escapeHTML(searchQuery)}" under the selected filter.</p>
+              <button class="btn btn-secondary" onclick="window.resetCampaignFilters()">
+                <i class="fas fa-undo"></i> Reset Filters
+              </button>
+            </div>
+          </div>
+        `;
+        return;
+      }
+
+      grid.innerHTML = filtered.map(c => {
+        const raised = c.raised !== undefined ? c.raised : (c.raised_amount || 0);
+        const goal = c.goal !== undefined ? c.goal : (c.target_amount || 50000);
+        const supporters = c.supporters !== undefined ? c.supporters : (c.supporters_count || 0);
+        const percent = Math.min(100, Math.round((raised / (goal || 1)) * 100));
+        const safeTitle = window.escapeHTML(c.title);
+        const safeNgo = window.escapeHTML(c.ngoName || c.ngo_name || 'Community Partner');
+        const safeDesc = window.escapeHTML(c.description);
+
+        return `
+          <div class="campaign-card">
+            <div class="campaign-img-wrap">
+              <img src="${c.image}" alt="${safeTitle}" onerror="this.onerror=null; this.src='assets/images/fallback-banner.svg';">
+              <span class="opp-category-tag" style="background: rgba(255, 251, 234, 0.95);">${c.category}</span>
+            </div>
+            <div class="campaign-body">
+              <div>
+                <div style="font-size: 0.85rem; font-weight: 700; color: var(--accent-green); margin-bottom: 0.35rem;">
+                  <i class="fas fa-building"></i> ${safeNgo}
+                </div>
+                <h3 style="font-size: 1.2rem; margin-bottom: 0.65rem; line-height: 1.35;">${safeTitle}</h3>
+                <p style="font-size: 0.9rem; margin-bottom: 1.25rem; color: var(--text-muted);">${safeDesc}</p>
+              </div>
+
+              <div>
+                <div class="funding-numbers">
+                  <div>
+                    <span style="font-size: 0.78rem; color: var(--text-muted); display: block;">Raised so far</span>
+                    <strong style="color: var(--accent-green);">₹${raised.toLocaleString('en-IN')}</strong>
+                  </div>
+                  <div style="text-align: right;">
+                    <span style="font-size: 0.78rem; color: var(--text-muted); display: block;">Target Goal</span>
+                    <span style="font-weight: 700; color: var(--text-main);">₹${goal.toLocaleString('en-IN')}</span>
+                  </div>
+                </div>
+
+                <div class="progress-track">
+                  <div class="progress-bar" style="width: ${percent}%;"></div>
+                </div>
+
+                <div style="display: flex; justify-content: space-between; font-size: 0.82rem; color: var(--text-muted); margin-bottom: 1.25rem;">
+                  <span><i class="fas fa-heart" style="color: var(--accent-green);"></i> <strong>${supporters}</strong> Supporters</span>
+                  <span><i class="fas fa-clock"></i> <strong>${c.daysLeft || 14}</strong> days left</span>
+                </div>
+
+                <div style="display: flex; gap: 0.5rem;">
+                  <button class="btn btn-sm btn-outline" style="flex: 1;" onclick="window.openCampaignDetailsModal('${c.id}')">
+                    <i class="fas fa-info-circle"></i> Details
+                  </button>
+                  <button class="btn btn-sm btn-green" style="flex: 1.4;" onclick="openDonationModal('${c.id}')">
+                    <i class="fas fa-heart"></i> Donate Now
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function setupFilters() {
+      const searchInput = document.getElementById('campaignSearchInput');
+      const sortSelect = document.getElementById('campaignSortSelect');
+      const chips = document.querySelectorAll('#campaignFilterChips .filter-chip');
+
+      if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+          searchQuery = e.target.value.trim();
+          renderCampaigns();
+        });
+      }
+
+      if (sortSelect) {
+        sortSelect.addEventListener('change', (e) => {
+          currentSort = e.target.value;
+          renderCampaigns();
+        });
+      }
+
+      chips.forEach(chip => {
+        chip.addEventListener('click', () => {
+          chips.forEach(c => c.classList.remove('active'));
+          chip.classList.add('active');
+          currentCategory = chip.getAttribute('data-category');
+          renderCampaigns();
+        });
+      });
+    }
+
+    window.resetCampaignFilters = function () {
+      searchQuery = '';
+      currentCategory = 'all';
+      currentSort = 'urgent';
+
+      const sInput = document.getElementById('campaignSearchInput');
+      const sSelect = document.getElementById('campaignSortSelect');
+      if (sInput) sInput.value = '';
+      if (sSelect) sSelect.value = 'urgent';
+
+      document.querySelectorAll('#campaignFilterChips .filter-chip').forEach(c => {
+        c.classList.toggle('active', c.getAttribute('data-category') === 'all');
+      });
+
+      renderCampaigns();
+    };
+
+    let currentCampaignsList = [];
+
+    window.openDonationModal = function (campId, prefillAmount = null) {
+      let campaign = (currentCampaignsList && currentCampaignsList.find(c => c.id === campId)) ||
+        (window.HCStore && window.HCStore.getCampaignById(campId));
+      if (!campaign && currentCampaignsList && currentCampaignsList.length > 0) {
+        campaign = currentCampaignsList[0];
+      }
+      if (!campaign && window.HCStore) {
+        campaign = window.HCStore.getCampaigns()[0];
+      }
+      if (!campaign) return;
+
+      document.getElementById('donCampId').value = campaign.id;
+      document.getElementById('modalCampTitle').textContent = campaign.title || 'Support This Initiative';
+      const ngoName = campaign.ngoName || campaign.ngo_name || 'Verified Grassroots NGO';
+      document.getElementById('modalCampNgo').textContent = `Beneficiary NGO: ${ngoName}`;
+
+      const campImg = document.getElementById('modalCampImg');
+      if (campImg) {
+        campImg.src = campaign.image || 'assets/images/fallback-banner.svg';
+        campImg.alt = campaign.title || 'Campaign Banner';
+      }
+
+      const noteEl = document.getElementById('modalCampProgressNote');
+      if (noteEl) {
+        const raised = campaign.raised !== undefined ? campaign.raised : (campaign.raised_amount || 0);
+        const goal = campaign.goal !== undefined ? campaign.goal : (campaign.target_amount || 50000);
+        const pct = Math.min(100, Math.round((raised / (goal || 1)) * 100));
+        noteEl.textContent = `Goal: ₹${goal.toLocaleString('en-IN')} • Raised: ₹${raised.toLocaleString('en-IN')} (${pct}%)`;
+      }
+
+      const u = (window.ImpactHubAPI && window.ImpactHubAPI.getCurrentUser()) || (window.HCStore && window.HCStore.getCurrentUser());
+      const nameField = document.getElementById('donorName');
+      const emailField = document.getElementById('donorEmail');
+      const phoneField = document.getElementById('donorPhone');
+      const messageField = document.getElementById('donorMessage');
+      const demoAck = document.getElementById('demoAcknowledge');
+
+      if (nameField) nameField.value = u ? (u.name || '') : '';
+      if (emailField) emailField.value = u ? (u.email || '') : '';
+      if (phoneField) phoneField.value = u ? (u.phone || '') : '';
+      if (messageField) messageField.value = '';
+      if (demoAck) demoAck.checked = false;
+
+      // Clear previous validation error messages and styling
+      ['amountError', 'nameError', 'phoneError', 'emailError', 'demoError'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) { el.textContent = ''; el.style.display = 'none'; }
+      });
+      document.querySelectorAll('#donationForm .form-control').forEach(el => el.classList.remove('is-invalid'));
+
+      const initialAmt = prefillAmount || 1000;
+      const customInput = document.getElementById('customDonAmount');
+      if (customInput) customInput.value = initialAmt;
+      const summaryAmount = document.getElementById('donSummaryAmount');
+      if (summaryAmount) summaryAmount.textContent = `₹${Number(initialAmt).toLocaleString('en-IN')}`;
+
+      document.querySelectorAll('.don-tier-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('data-val') === String(initialAmt));
+      });
+
+      window.openModal('donationModal');
+    };
+
+    function setupDonationFlow() {
+      const tierBtns = document.querySelectorAll('.don-tier-btn');
+      const customInput = document.getElementById('customDonAmount');
+      const summaryAmount = document.getElementById('donSummaryAmount');
+      const form = document.getElementById('donationForm');
+
+      // Clear validation errors on user typing / selecting
+      const clearError = (fieldId, errId) => {
+        const f = document.getElementById(fieldId);
+        const err = document.getElementById(errId);
+        if (f) {
+          f.addEventListener('input', () => {
+            f.classList.remove('is-invalid');
+            if (err) { err.textContent = ''; err.style.display = 'none'; }
+          });
+        }
+      };
+
+      clearError('customDonAmount', 'amountError');
+      clearError('donorName', 'nameError');
+      clearError('donorPhone', 'phoneError');
+      clearError('donorEmail', 'emailError');
+
+      const demoAck = document.getElementById('demoAcknowledge');
+      if (demoAck) {
+        demoAck.addEventListener('change', () => {
+          const err = document.getElementById('demoError');
+          if (err) { err.textContent = ''; err.style.display = 'none'; }
+        });
+      }
+
+      tierBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          tierBtns.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          const val = btn.getAttribute('data-val');
+          if (customInput) customInput.value = val;
+          if (summaryAmount) summaryAmount.textContent = `₹${Number(val).toLocaleString('en-IN')}`;
+          const err = document.getElementById('amountError');
+          if (err) { err.textContent = ''; err.style.display = 'none'; }
+        });
+      });
+
+      if (customInput) {
+        customInput.addEventListener('input', (e) => {
+          const val = Number(e.target.value) || 0;
+          if (summaryAmount) summaryAmount.textContent = `₹${val.toLocaleString('en-IN')}`;
+          tierBtns.forEach(b => {
+            b.classList.toggle('active', b.getAttribute('data-val') === e.target.value);
+          });
+        });
+      }
+
+      if (form) {
+        form.addEventListener('submit', async (e) => {
+          e.preventDefault();
+          let hasError = false;
+
+          const campId = document.getElementById('donCampId').value;
+          const amount = Number(document.getElementById('customDonAmount').value);
+          const donorName = document.getElementById('donorName').value.trim();
+          const donorPhone = document.getElementById('donorPhone').value.trim();
+          const donorEmail = document.getElementById('donorEmail').value.trim();
+          const donorMessage = (document.getElementById('donorMessage') ? document.getElementById('donorMessage').value : '').trim();
+          const isAck = document.getElementById('demoAcknowledge') ? document.getElementById('demoAcknowledge').checked : true;
+
+          // Helper to set field error
+          const setError = (fieldId, errId, msg) => {
+            hasError = true;
+            const f = document.getElementById(fieldId);
+            const err = document.getElementById(errId);
+            if (f) f.classList.add('is-invalid');
+            if (err) { err.textContent = msg; err.style.display = 'block'; }
+          };
+
+          // 1. Amount validation
+          if (isNaN(amount) || amount < 10 || amount > 500000) {
+            setError('customDonAmount', 'amountError', 'Please enter a valid amount between ₹10 and ₹5,00,000.');
+          }
+
+          // 2. Name validation
+          if (!donorName || donorName.length < 2) {
+            setError('donorName', 'nameError', 'Please enter your full name (minimum 2 characters).');
+          }
+
+          // 3. Phone validation
+          const cleanPhone = donorPhone.replace(/[\s\-\(\)\+]/g, '');
+          if (!cleanPhone || cleanPhone.length < 10 || cleanPhone.length > 13) {
+            setError('donorPhone', 'phoneError', 'Please enter a valid 10-digit mobile number.');
+          }
+
+          // 4. Email validation
+          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          if (!donorEmail || !emailRegex.test(donorEmail)) {
+            setError('donorEmail', 'emailError', 'Please enter a valid email address (e.g. name@domain.com).');
+          }
+
+          // 5. Demonstration Acknowledgment
+          if (!isAck) {
+            hasError = true;
+            const demoErr = document.getElementById('demoError');
+            if (demoErr) {
+              demoErr.textContent = 'Please check the box to confirm you understand this is a demonstration transaction.';
+              demoErr.style.display = 'block';
+            }
+          }
+
+          if (hasError) {
+            const firstErr = form.querySelector('.is-invalid, input:invalid');
+            if (firstErr) firstErr.focus();
+            return;
+          }
+
+          const submitBtn = document.getElementById('confirmDonationBtn');
+          if (submitBtn) {
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing Donation...';
+          }
+
+          try {
+            let result = null;
+            if (window.ImpactHubAPI) {
+              const apiRes = await window.ImpactHubAPI.makeDonation({
+                campaignId: campId,
+                amount: amount,
+                donorName: donorName,
+                donorEmail: donorEmail,
+                donorPhone: donorPhone,
+                donorMessage: donorMessage
+              }).catch(() => null);
+
+              if (apiRes && apiRes.success) {
+                result = { success: true, donation: apiRes.donation };
+              }
+            }
+
+            if (window.HCStore) {
+              const storeRes = window.HCStore.donateToCampaign(campId, amount, donorName, donorEmail, donorPhone, donorMessage);
+              if (!result && storeRes && storeRes.success) {
+                result = storeRes;
+              }
+            }
+
+            window.closeModal('donationModal');
+            window.showToast(`Thank you, ${donorName}! Your simulated contribution of ₹${amount.toLocaleString('en-IN')} is confirmed.`, 'success', 'fas fa-heart');
+            renderCampaigns();
+
+            if (result && result.donation) {
+              setTimeout(() => {
+                window.openDonationReceiptModal(result.donation);
+              }, 350);
+            }
+          } catch (err) {
+            window.showToast('Contribution error: ' + err.message, 'error');
+          } finally {
+            if (submitBtn) {
+              submitBtn.disabled = false;
+              submitBtn.innerHTML = '<i class="fas fa-heart"></i> Submit Donation';
+            }
+          }
+        });
+      }
+    }
+  </script>
+</body>
+
+</html>

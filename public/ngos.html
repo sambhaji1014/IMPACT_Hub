@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NGO Directory — ImpactHub</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+  <!-- Site Header -->
+  <header class="site-header">
+    <div class="container nav-container">
+      <a href="index.html" class="brand-logo" style="text-decoration: none;">
+        <div class="brand-logo-svg">
+          <svg viewBox="0 0 24 24">
+            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+          </svg>
+        </div>
+        <div class="brand-text-wrap" style="margin-left: 0.6rem;">
+          Impact<span class="hub-accent">Hub</span>
+        </div>
+      </a>
+
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="campaigns.html">Campaigns</a></li>
+        <li><a href="ngos.html" class="active">NGO Directory</a></li>
+        <li><a href="volunteer.html">Volunteer</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <li><a href="dashboard.html">Dashboard</a></li>
+      </ul>
+
+      <div class="nav-actions">
+        <button class="mobile-menu-btn" aria-label="Toggle menu"><i class="fas fa-bars"></i></button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Banner -->
+  <section class="section-pale" style="padding: 4rem 0 3rem 0;">
+    <div class="container">
+      <div class="section-header" style="margin-bottom: 0;">
+        <div class="section-badge"><i class="fas fa-certificate"></i> Verified Social Partners</div>
+        <h2>Discover Grassroots NGOs</h2>
+        <p>Explore vetted, high-impact non-profits driving sustainable social and environmental transformation across India.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- NGO Directory Section -->
+  <section style="padding: 3rem 0 5rem 0;">
+    <div class="container">
+      
+      <!-- Search, Sort & Filters Bar -->
+      <div class="filter-bar" style="display: flex; flex-direction: column; gap: 1.25rem; align-items: stretch;">
+        <div style="display: flex; gap: 1rem; flex-wrap: wrap; justify-content: space-between; align-items: center;">
+          <div class="search-input-wrap" style="max-width: 500px; flex-grow: 1;">
+            <i class="fas fa-search"></i>
+            <input type="text" id="ngoSearchInput" placeholder="Search NGOs by name, cause or city (e.g. Pune, Education, Green)...">
+          </div>
+
+          <div style="display: flex; align-items: center; gap: 0.65rem;">
+            <label for="ngoSortSelect" style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted); white-space: nowrap;">
+              <i class="fas fa-sort-amount-down"></i> Sort By:
+            </label>
+            <select class="form-control" id="ngoSortSelect" style="width: auto; padding: 0.5rem 1rem; font-size: 0.88rem;">
+              <option value="relevance">Most Relevant</option>
+              <option value="volunteers">Most Volunteers</option>
+              <option value="campaigns">Most Active Campaigns</option>
+              <option value="name">Name (A – Z)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Cause Filter Chips -->
+        <div class="filter-chips" id="ngoFilterChips">
+          <button class="filter-chip active" data-category="all">All Causes</button>
+          <button class="filter-chip" data-category="Environment">🌳 Environment</button>
+          <button class="filter-chip" data-category="Education">📚 Education</button>
+          <button class="filter-chip" data-category="Healthcare">🩺 Healthcare</button>
+          <button class="filter-chip" data-category="Animal Welfare">🐾 Animal Welfare</button>
+          <button class="filter-chip" data-category="Women Empowerment">👩 Women Empowerment</button>
+          <button class="filter-chip" data-category="Child Welfare">👶 Child Welfare</button>
+          <button class="filter-chip" data-category="Community Development">🤝 Community</button>
+        </div>
+      </div>
+
+      <!-- NGO Cards Grid -->
+      <div class="cards-grid" id="ngosGrid">
+        <!-- Rendered dynamically -->
+      </div>
+    </div>
+  </section>
+
+  <!-- NGO Profile & Transparency Audit Modal -->
+  <div class="modal-backdrop" id="ngoProfileModal">
+    <div class="modal-card" style="max-width: 650px;">
+      <div class="modal-header">
+        <h3 id="modalNgoName"><i class="fas fa-building" style="color: var(--accent-green);"></i> Organization Profile</h3>
+        <button class="modal-close-btn" onclick="closeModal('ngoProfileModal')">&times;</button>
+      </div>
+      <div class="modal-body" id="ngoProfileContent">
+        <!-- Populated dynamically -->
+      </div>
+      <div class="modal-footer" style="display: flex; justify-content: space-between; align-items: center;">
+        <button type="button" class="btn btn-secondary" onclick="closeModal('ngoProfileModal')">Close</button>
+        <div style="display: flex; gap: 0.5rem;">
+          <a href="#" class="btn btn-outline" id="ngoModalVolunteerBtn"><i class="fas fa-hands-helping"></i> Volunteer Drives</a>
+          <a href="#" class="btn btn-green" id="ngoModalCampaignBtn"><i class="fas fa-heart"></i> View Campaigns</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NGO Dedicated Support & Action Modal -->
+  <div class="modal-backdrop" id="ngoSupportModal">
+    <div class="modal-card" style="max-width: 680px;">
+      <div class="modal-header">
+        <div>
+          <h3 id="supportModalTitle"><i class="fas fa-hand-holding-heart" style="color: var(--accent-green);"></i> Support Organization</h3>
+          <p id="supportModalSubtitle" style="font-size: 0.85rem; color: var(--text-muted); margin: 0.2rem 0 0 0;">Contribute to grassroots impact</p>
+        </div>
+        <button class="modal-close-btn" onclick="closeModal('ngoSupportModal')">&times;</button>
+      </div>
+      <div class="modal-body" id="ngoSupportContent">
+        <!-- Populated dynamically -->
+      </div>
+      <div class="modal-footer" style="display: flex; justify-content: space-between; align-items: center;">
+        <button type="button" class="btn btn-secondary" onclick="closeModal('ngoSupportModal')">Close</button>
+        <div style="display: flex; gap: 0.5rem;" id="supportModalActionBtns">
+          <!-- Populated dynamically -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Site Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col" style="max-width: 340px;">
+          <a href="index.html" class="brand-logo" style="text-decoration: none; margin-bottom: 0.85rem; display: inline-flex;">
+            <div class="brand-logo-svg" style="background: rgba(255,255,255,0.15);">
+              <svg viewBox="0 0 24 24">
+                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="#FFFFFF"/>
+              </svg>
+            </div>
+            <div class="brand-text-wrap" style="color: #FFFFFF; margin-left: 0.6rem;">
+              Impact<span style="color: #86EFAC;">Hub</span>
+            </div>
+          </a>
+          <p style="font-size: 0.88rem; line-height: 1.6; color: #9CA3AF; margin-bottom: 1rem;">
+            A transparent platform connecting non-governmental organizations, donors, and volunteers to create verifiable social progress.
+          </p>
+          <div style="font-size: 0.78rem; color: #9CA3AF; background: rgba(255,255,255,0.06); padding: 0.6rem 0.85rem; border-radius: var(--radius-sm); border: 1px solid rgba(255,255,255,0.1);">
+            <i class="fas fa-flask" style="color: #86EFAC; margin-right: 0.35rem;"></i>
+            <strong>Evaluation Environment:</strong> Simulated contributions and activity tracking for functional demonstration.
+          </div>
+        </div>
+
+        <div class="footer-col">
+          <h4>Platform</h4>
+          <ul class="footer-links">
+            <li><a href="campaigns.html">Active Campaigns</a></li>
+            <li><a href="ngos.html">NGO Directory</a></li>
+            <li><a href="volunteer.html">Volunteer Drives</a></li>
+            <li><a href="dashboard.html">Role Dashboard</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Accounts</h4>
+          <ul class="footer-links">
+            <li><a href="login.html">Sign In</a></li>
+            <li><a href="signup.html">Create Account</a></li>
+            <li><a href="about.html">About Platform</a></li>
+            <li><a href="contact.html">Contact & Support</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Trust & Ethics</h4>
+          <ul class="footer-links">
+            <li><a href="impact.html">Impact Verification</a></li>
+            <li><a href="about.html">Financial Transparency</a></li>
+            <li><a href="contact.html">Community Guidelines</a></li>
+            <li><a href="about.html#governance">NGO Due Diligence</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <span>&copy; 2026 ImpactHub. All rights reserved.</span>
+        <span>Transparent Philanthropy & Community Mobilization Platform</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/api.js"></script>
+  <script src="js/store.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    let currentCategory = 'all';
+    let searchQuery = '';
+    let currentSort = 'relevance';
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const queryParam = urlParams.get('search');
+      if (queryParam) {
+        searchQuery = queryParam;
+        const sInput = document.getElementById('ngoSearchInput');
+        if (sInput) sInput.value = queryParam;
+      }
+
+      renderNGOs();
+      setupFilters();
+
+      window.addEventListener('hc:data-reset', () => {
+        renderNGOs();
+      });
+    });
+
+    function renderNGOs() {
+      const grid = document.getElementById('ngosGrid');
+      if (!grid) return;
+
+      const ngos = window.HCStore.getNGOs();
+
+      let filtered = ngos.filter(n => {
+        const cat = (n.category || '').toLowerCase();
+        const matchesCategory = currentCategory === 'all' || cat === currentCategory.toLowerCase();
+        const q = (searchQuery || '').trim().toLowerCase();
+        const matchesSearch = !q ||
+          ((n.name || '').toLowerCase().includes(q)) ||
+          ((n.location || '').toLowerCase().includes(q)) ||
+          ((n.description || '').toLowerCase().includes(q));
+        return matchesCategory && matchesSearch;
+      });
+
+      // Sorting
+      if (currentSort === 'volunteers') {
+        filtered.sort((a, b) => (b.volunteersCount || 0) - (a.volunteersCount || 0));
+      } else if (currentSort === 'campaigns') {
+        filtered.sort((a, b) => (b.activeCampaignsCount || 0) - (a.activeCampaignsCount || 0));
+      } else if (currentSort === 'name') {
+        filtered.sort((a, b) => a.name.localeCompare(b.name));
+      }
+
+      if (filtered.length === 0) {
+        grid.innerHTML = `
+          <div style="grid-column: 1 / -1;">
+            <div class="empty-state-box">
+              <div class="empty-state-icon"><i class="fas fa-building"></i></div>
+              <h3>No Organizations Found</h3>
+              <p style="font-size: 0.95rem; margin-bottom: 1.25rem;">No NGOs matched "${window.escapeHTML(searchQuery)}" under the selected filter.</p>
+              <button class="btn btn-secondary" onclick="window.resetNgoFilters()">
+                <i class="fas fa-undo"></i> Reset Filters
+              </button>
+            </div>
+          </div>
+        `;
+        return;
+      }
+
+      grid.innerHTML = filtered.map(ngo => {
+        const safeName = window.escapeHTML(ngo.name);
+        const safeLoc = window.escapeHTML(ngo.location);
+        const safeCat = window.escapeHTML(ngo.category);
+        const safeDesc = window.escapeHTML(ngo.description);
+        const bannerSrc = ngo.banner || 'assets/images/fallback-banner.svg';
+        const logoSrc = ngo.logo || 'assets/images/fallback-logo.svg';
+
+        return `
+          <div class="ngo-card">
+            <div class="ngo-banner-wrap">
+              <img src="${bannerSrc}" alt="${safeName} banner" onerror="this.onerror=null; this.src='assets/images/fallback-banner.svg';">
+              <div class="ngo-logo-overlap">
+                <img src="${logoSrc}" alt="${safeName} logo" onerror="this.onerror=null; this.src='assets/images/fallback-logo.svg';" style="width: 100%; height: 100%; object-fit: cover;">
+              </div>
+            </div>
+            <div class="ngo-card-body">
+              <div>
+                <div class="ngo-title-row">
+                  <h3>${safeName}</h3>
+                  ${ngo.verified ? '<i class="fas fa-check-circle badge-verified" title="Registered Partner"></i>' : ''}
+                </div>
+                <div class="ngo-meta">
+                  <span><i class="fas fa-map-marker-alt" style="color: var(--accent-green);"></i> ${safeLoc}</span>
+                  <span><i class="fas fa-tag" style="color: var(--text-muted);"></i> ${safeCat}</span>
+                </div>
+                <p style="color: var(--text-muted); font-size: 0.88rem;">${safeDesc}</p>
+              </div>
+
+              <div>
+                <div class="ngo-stats-footer">
+                  <span><i class="fas fa-users" style="color: var(--accent-green);"></i> <strong>${ngo.volunteersCount || 0}+</strong> Volunteers</span>
+                  <span><i class="fas fa-bullhorn" style="color: var(--accent-blue);"></i> <strong>${ngo.activeCampaignsCount || 0}</strong> Active</span>
+                </div>
+                <div class="ngo-actions">
+                  <button class="btn btn-sm btn-secondary" style="flex: 1;" onclick="viewNgoProfile('${ngo.id}')">
+                    <i class="fas fa-info-circle"></i> Profile
+                  </button>
+                  <button class="btn btn-sm btn-green" style="flex: 1;" onclick="openNgoSupportModal('${ngo.id}')">
+                    <i class="fas fa-heart"></i> Support
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function setupFilters() {
+      const searchInput = document.getElementById('ngoSearchInput');
+      const sortSelect = document.getElementById('ngoSortSelect');
+      const chips = document.querySelectorAll('#ngoFilterChips .filter-chip');
+
+      if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+          searchQuery = e.target.value.trim();
+          renderNGOs();
+        });
+      }
+
+      if (sortSelect) {
+        sortSelect.addEventListener('change', (e) => {
+          currentSort = e.target.value;
+          renderNGOs();
+        });
+      }
+
+      chips.forEach(chip => {
+        chip.addEventListener('click', () => {
+          chips.forEach(c => c.classList.remove('active'));
+          chip.classList.add('active');
+          currentCategory = chip.getAttribute('data-category');
+          renderNGOs();
+        });
+      });
+    }
+
+    window.resetNgoFilters = function() {
+      searchQuery = '';
+      currentCategory = 'all';
+      currentSort = 'relevance';
+
+      const sInput = document.getElementById('ngoSearchInput');
+      const sSelect = document.getElementById('ngoSortSelect');
+      if (sInput) sInput.value = '';
+      if (sSelect) sSelect.value = 'relevance';
+
+      document.querySelectorAll('#ngoFilterChips .filter-chip').forEach(c => {
+        c.classList.toggle('active', c.getAttribute('data-category') === 'all');
+      });
+
+      renderNGOs();
+    };
+
+    window.viewNgoProfile = function(ngoId) {
+      const ngo = window.HCStore.getNGOById(ngoId);
+      if (!ngo) return;
+
+      document.getElementById('modalNgoName').innerHTML = `<i class="fas fa-building" style="color: var(--accent-green);"></i> ${window.escapeHTML(ngo.name)}`;
+
+      const volBtn = document.getElementById('ngoModalVolunteerBtn');
+      const campBtn = document.getElementById('ngoModalCampaignBtn');
+      if (volBtn) volBtn.href = `volunteer.html?ngo=${encodeURIComponent(ngo.name)}`;
+      if (campBtn) campBtn.href = `campaigns.html?ngo=${encodeURIComponent(ngo.name)}`;
+
+      // Find initiatives for this NGO
+      const allOpps = window.HCStore.getOpportunities().filter(o => o.ngoId === ngo.id || o.ngoName === ngo.name || (o.ngo_name && o.ngo_name === ngo.name));
+      const allCamps = window.HCStore.getCampaigns().filter(c => c.ngoId === ngo.id || c.ngoName === ngo.name || (c.ngo_name && c.ngo_name === ngo.name));
+
+      let initiativesHtml = '';
+      if (allOpps.length > 0) {
+        initiativesHtml += `<h5 style="margin: 1.25rem 0 0.5rem 0;"><i class="fas fa-hands-helping" style="color: var(--accent-green);"></i> Active Volunteer Drives:</h5>`;
+        allOpps.forEach(o => {
+          initiativesHtml += `
+            <div style="display: flex; justify-content: space-between; align-items: center; background: var(--bg-primary); padding: 0.65rem 0.85rem; border-radius: var(--radius-sm); border: 1px solid var(--border-light); margin-bottom: 0.5rem;">
+              <div>
+                <strong style="font-size: 0.88rem; display: block;">${window.escapeHTML(o.title)}</strong>
+                <span style="font-size: 0.76rem; color: var(--text-muted);">${window.escapeHTML(o.date)} • ${window.escapeHTML(o.location)}</span>
+              </div>
+              <a href="volunteer.html?opp=${o.id}" class="btn btn-sm btn-outline">Join</a>
+            </div>
+          `;
+        });
+      } else {
+        initiativesHtml += `
+          <h5 style="margin: 1.25rem 0 0.5rem 0;"><i class="fas fa-hands-helping" style="color: var(--accent-green);"></i> Volunteer Drives:</h5>
+          <div style="background: var(--bg-primary); padding: 0.85rem; border-radius: var(--radius-sm); border: 1px dashed var(--border-light); font-size: 0.85rem; color: var(--text-muted); text-align: center;">
+            No scheduled volunteer drives open at this moment.
+          </div>
+        `;
+      }
+
+      if (allCamps.length > 0) {
+        initiativesHtml += `<h5 style="margin: 1.25rem 0 0.5rem 0;"><i class="fas fa-bullhorn" style="color: var(--accent-green);"></i> Active Crowdfunding Campaigns:</h5>`;
+        allCamps.forEach(c => {
+          const raised = c.raised !== undefined ? c.raised : (c.raised_amount || 0);
+          const goal = c.goal !== undefined ? c.goal : (c.target_amount || 50000);
+          const pct = Math.min(100, Math.round((raised / (goal || 1)) * 100));
+          initiativesHtml += `
+            <div style="background: var(--bg-primary); padding: 0.75rem 0.85rem; border-radius: var(--radius-sm); border: 1px solid var(--border-light); margin-bottom: 0.5rem;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
+                <strong style="font-size: 0.88rem;">${window.escapeHTML(c.title)}</strong>
+                <span style="font-size: 0.8rem; font-weight: 700; color: var(--accent-green);">₹${raised.toLocaleString('en-IN')} (${pct}%)</span>
+              </div>
+              <div class="progress-track" style="height: 6px; margin-bottom: 0.5rem;">
+                <div class="progress-bar" style="width: ${pct}%;"></div>
+              </div>
+            </div>
+          `;
+        });
+      } else {
+        initiativesHtml += `
+          <h5 style="margin: 1.25rem 0 0.5rem 0;"><i class="fas fa-bullhorn" style="color: var(--accent-green);"></i> Crowdfunding Campaigns:</h5>
+          <div style="background: var(--bg-primary); padding: 0.85rem; border-radius: var(--radius-sm); border: 1px dashed var(--border-light); font-size: 0.85rem; color: var(--text-muted); text-align: center;">
+            No public crowdfunding campaigns currently open.
+          </div>
+        `;
+      }
+
+      document.getElementById('ngoProfileContent').innerHTML = `
+        <div style="display: flex; gap: 1.25rem; align-items: center; margin-bottom: 1.25rem;">
+          <img src="${ngo.logo || 'assets/images/fallback-logo.svg'}" alt="${window.escapeHTML(ngo.name)}" onerror="this.onerror=null; this.src='assets/images/fallback-logo.svg';" style="width: 75px; height: 75px; border-radius: 16px; object-fit: cover; border: 2px solid var(--border-light);">
+          <div>
+            <h4 style="font-size: 1.25rem; margin-bottom: 0.2rem;">${window.escapeHTML(ngo.name)} ${ngo.verified ? '<i class="fas fa-check-circle" style="color: var(--accent-green);"></i>' : ''}</h4>
+            <div style="font-size: 0.85rem; color: var(--text-muted);"><i class="fas fa-map-marker-alt" style="color: var(--accent-green);"></i> ${window.escapeHTML(ngo.location)}</div>
+            <div style="font-size: 0.82rem; color: var(--accent-green); font-weight: 600; margin-top: 0.2rem;">Founded in ${ngo.foundedYear || 2020} • Documented Partner</div>
+          </div>
+        </div>
+
+        <h5 style="margin-bottom: 0.4rem;">About the Organization:</h5>
+        <p style="font-size: 0.92rem; margin-bottom: 1.25rem; line-height: 1.6; color: var(--text-muted);">${window.escapeHTML(ngo.description)}</p>
+        
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; background: var(--bg-primary); padding: 1rem; border-radius: var(--radius-md); text-align: center; border: 1px solid var(--border-light);">
+          <div>
+            <strong style="font-size: 1.2rem; color: var(--text-main); display: block;">${ngo.volunteersCount || 0}+</strong>
+            <span style="font-size: 0.75rem; color: var(--text-muted);">Volunteers Registered</span>
+          </div>
+          <div>
+            <strong style="font-size: 1.2rem; color: var(--text-main); display: block;">${ngo.activeCampaignsCount || 0}</strong>
+            <span style="font-size: 0.75rem; color: var(--text-muted);">Active Campaigns</span>
+          </div>
+          <div>
+            <strong style="font-size: 1.2rem; color: var(--accent-green); display: block;">Active</strong>
+            <span style="font-size: 0.75rem; color: var(--text-muted);">Platform Status</span>
+          </div>
+        </div>
+
+        ${initiativesHtml}
+      `;
+
+      window.openModal('ngoProfileModal');
+    };
+
+    window.openNgoSupportModal = function(ngoId) {
+      const ngo = window.HCStore.getNGOById(ngoId);
+      if (!ngo) return;
+
+      const safeName = window.escapeHTML(ngo.name);
+      document.getElementById('supportModalTitle').innerHTML = `<i class="fas fa-hand-holding-heart" style="color: var(--accent-green);"></i> Support ${safeName}`;
+      document.getElementById('supportModalSubtitle').textContent = `${ngo.category} • ${ngo.location} • Grassroots Partner`;
+
+      const allCamps = window.HCStore.getCampaigns().filter(c => c.ngoId === ngo.id || c.ngoName === ngo.name || (c.ngo_name && c.ngo_name === ngo.name));
+      const allOpps = window.HCStore.getOpportunities().filter(o => o.ngoId === ngo.id || o.ngoName === ngo.name || (o.ngo_name && o.ngo_name === ngo.name));
+
+      let campaignsSection = '';
+      if (allCamps.length > 0) {
+        campaignsSection = `
+          <div style="margin-bottom: 1.25rem;">
+            <h4 style="font-size: 1rem; margin-bottom: 0.65rem; color: var(--text-main); display: flex; align-items: center; gap: 0.4rem;">
+              <i class="fas fa-bullhorn" style="color: var(--accent-green);"></i> Active Crowdfunding Campaigns
+            </h4>
+            <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+              ${allCamps.map(c => {
+                const raised = c.raised !== undefined ? c.raised : (c.raised_amount || 0);
+                const goal = c.goal !== undefined ? c.goal : (c.target_amount || 50000);
+                const pct = Math.min(100, Math.round((raised / (goal || 1)) * 100));
+                return `
+                  <div style="background: var(--bg-primary); border: 1px solid var(--border-light); border-radius: var(--radius-sm); padding: 0.85rem; display: flex; justify-content: space-between; align-items: center; gap: 1rem;">
+                    <div style="flex: 1;">
+                      <strong style="font-size: 0.92rem; display: block; margin-bottom: 0.25rem;">${window.escapeHTML(c.title)}</strong>
+                      <div class="progress-track" style="height: 6px; margin-bottom: 0.35rem;">
+                        <div class="progress-bar" style="width: ${pct}%;"></div>
+                      </div>
+                      <span style="font-size: 0.76rem; color: var(--text-muted);">
+                        Raised: <strong>₹${raised.toLocaleString('en-IN')}</strong> of ₹${goal.toLocaleString('en-IN')} (${pct}%)
+                      </span>
+                    </div>
+                    <a href="campaigns.html?camp=${c.id}&donate=true" class="btn btn-sm btn-green" style="white-space: nowrap;">
+                      <i class="fas fa-heart"></i> Donate
+                    </a>
+                  </div>
+                `;
+              }).join('')}
+            </div>
+          </div>
+        `;
+      } else {
+        campaignsSection = `
+          <div style="background: var(--bg-primary); border: 1px dashed var(--border-light); border-radius: var(--radius-sm); padding: 1rem; text-align: center; margin-bottom: 1.25rem;">
+            <i class="fas fa-info-circle" style="color: var(--accent-green); margin-bottom: 0.35rem; font-size: 1.2rem;"></i>
+            <h5 style="margin-bottom: 0.25rem;">No Active Public Campaigns</h5>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0;">${safeName} does not have an active open appeal at this time. You can contribute directly to their general impact mission below or join their volunteer drives.</p>
+          </div>
+        `;
+      }
+
+      let oppsSection = '';
+      if (allOpps.length > 0) {
+        oppsSection = `
+          <div style="margin-bottom: 1.25rem;">
+            <h4 style="font-size: 1rem; margin-bottom: 0.65rem; color: var(--text-main); display: flex; align-items: center; gap: 0.4rem;">
+              <i class="fas fa-hands-helping" style="color: var(--accent-green);"></i> Volunteer Opportunities
+            </h4>
+            <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+              ${allOpps.map(o => `
+                <div style="background: var(--bg-primary); border: 1px solid var(--border-light); border-radius: var(--radius-sm); padding: 0.75rem 0.85rem; display: flex; justify-content: space-between; align-items: center;">
+                  <div>
+                    <strong style="font-size: 0.88rem; display: block;">${window.escapeHTML(o.title)}</strong>
+                    <span style="font-size: 0.76rem; color: var(--text-muted);"><i class="fas fa-calendar-alt"></i> ${window.escapeHTML(o.date)} • <i class="fas fa-map-marker-alt"></i> ${window.escapeHTML(o.location)}</span>
+                  </div>
+                  <a href="volunteer.html?opp=${o.id}" class="btn btn-sm btn-outline">Join Drive</a>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      }
+
+      const u = (window.ImpactHubAPI && window.ImpactHubAPI.getCurrentUser()) || (window.HCStore && window.HCStore.getCurrentUser());
+
+      document.getElementById('ngoSupportContent').innerHTML = `
+        <div style="display: flex; gap: 1rem; align-items: center; background: #ECFDF5; border: 1px solid #A7F3D0; border-radius: var(--radius-md); padding: 0.85rem 1rem; margin-bottom: 1.25rem;">
+          <img src="${ngo.logo || 'assets/images/fallback-logo.svg'}" alt="${safeName}" onerror="this.onerror=null; this.src='assets/images/fallback-logo.svg';" style="width: 50px; height: 50px; border-radius: 12px; object-fit: cover;">
+          <div style="flex: 1;">
+            <strong style="font-size: 1rem; color: var(--accent-green); display: block;">Direct Support for ${safeName}</strong>
+            <p style="font-size: 0.82rem; color: #065F46; margin: 0;">100% of community contributions empower verifiable social progress with full transparent reporting.</p>
+          </div>
+        </div>
+
+        ${campaignsSection}
+        ${oppsSection}
+
+        <div style="border-top: 1px solid var(--border-light); padding-top: 1.25rem;">
+          <h4 style="font-size: 1rem; margin-bottom: 0.35rem; color: var(--text-main); display: flex; align-items: center; gap: 0.4rem;">
+            <i class="fas fa-seedling" style="color: var(--accent-green);"></i> Contribute to ${safeName}'s General Impact Fund
+          </h4>
+          <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 1rem;">
+            <i class="fas fa-flask" style="color: var(--accent-green);"></i> <strong>Demonstration Mode:</strong> Simulated contribution for CEP evaluation. Generates verifiable receipt code.
+          </p>
+
+          <form id="ngoDirectSupportForm" onsubmit="handleNgoDirectSupport(event, '${ngo.id}', '${safeName}')">
+            <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem;">
+              <button type="button" class="btn btn-outline btn-sm don-preset-btn active" data-amt="500" onclick="setNgoSupportAmt(500, this)">₹500</button>
+              <button type="button" class="btn btn-outline btn-sm don-preset-btn" data-amt="1000" onclick="setNgoSupportAmt(1000, this)">₹1,000</button>
+              <button type="button" class="btn btn-outline btn-sm don-preset-btn" data-amt="2500" onclick="setNgoSupportAmt(2500, this)">₹2,500</button>
+              <button type="button" class="btn btn-outline btn-sm don-preset-btn" data-amt="5000" onclick="setNgoSupportAmt(5000, this)">₹5,000</button>
+            </div>
+
+            <div class="form-group" style="margin-bottom: 0.85rem;">
+              <label style="font-size: 0.85rem; font-weight: 600;">Contribution Amount (INR) *</label>
+              <input type="number" id="ngoSupportAmount" class="form-control" value="500" min="50" step="50" required style="font-size: 1rem; font-weight: 700;">
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 1rem;">
+              <div class="form-group">
+                <label style="font-size: 0.82rem; font-weight: 600;">Your Name *</label>
+                <input type="text" id="ngoSupportName" class="form-control" value="${u ? window.escapeHTML(u.name || '') : ''}" placeholder="Full Name" required>
+              </div>
+              <div class="form-group">
+                <label style="font-size: 0.82rem; font-weight: 600;">Email Address *</label>
+                <input type="email" id="ngoSupportEmail" class="form-control" value="${u ? window.escapeHTML(u.email || '') : ''}" placeholder="email@domain.com" required>
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-green btn-block" id="ngoSupportSubmitBtn" style="padding: 0.75rem; font-size: 0.95rem; width: 100%;">
+              <i class="fas fa-check-circle"></i> Confirm Simulated Contribution
+            </button>
+          </form>
+        </div>
+      `;
+
+      document.getElementById('supportModalActionBtns').innerHTML = `
+        <a href="campaigns.html?ngo=${encodeURIComponent(ngo.name)}" class="btn btn-outline btn-sm">Explore Campaigns</a>
+        <a href="volunteer.html?ngo=${encodeURIComponent(ngo.name)}" class="btn btn-outline btn-sm">Volunteer Drives</a>
+      `;
+
+      window.openModal('ngoSupportModal');
+    };
+
+    window.setNgoSupportAmt = function(amt, btn) {
+      document.getElementById('ngoSupportAmount').value = amt;
+      document.querySelectorAll('.don-preset-btn').forEach(b => b.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+    };
+
+    window.handleNgoDirectSupport = async function(e, ngoId, ngoName) {
+      e.preventDefault();
+      const amount = Number(document.getElementById('ngoSupportAmount').value);
+      const name = document.getElementById('ngoSupportName').value.trim();
+      const email = document.getElementById('ngoSupportEmail').value.trim();
+
+      if (!name || !email || isNaN(amount) || amount <= 0) {
+        window.showToast('Please provide valid name, email, and contribution amount.', 'error');
+        return;
+      }
+
+      const submitBtn = document.getElementById('ngoSupportSubmitBtn');
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+      }
+
+      try {
+        let result = null;
+        // Check if there is an active campaign for this NGO to attach donation to, or attach to general fund
+        const ngoCamps = window.HCStore.getCampaigns().filter(c => c.ngoId === ngoId || c.ngoName === ngoName);
+        const campId = ngoCamps.length > 0 ? ngoCamps[0].id : 'camp-general';
+
+        if (window.ImpactHubAPI) {
+          const apiRes = await window.ImpactHubAPI.makeDonation({
+            campaignId: campId,
+            amount: amount,
+            donorName: name,
+            donorEmail: email
+          }).catch(() => null);
+
+          if (apiRes && apiRes.success) {
+            result = { success: true, donation: apiRes.donation };
+          }
+        }
+
+        if (!result && window.HCStore) {
+          result = window.HCStore.donateToCampaign(campId, amount, name, email);
+          if (result && result.donation) {
+            result.donation.ngoName = ngoName;
+          }
+        }
+
+        window.closeModal('ngoSupportModal');
+        window.showToast(`Thank you, ${name}! Simulated contribution of ₹${amount.toLocaleString('en-IN')} confirmed for ${ngoName}.`, 'success', 'fas fa-heart');
+
+        if (result && result.donation) {
+          setTimeout(() => {
+            if (window.openDonationReceiptModal) {
+              window.openDonationReceiptModal(result.donation);
+            }
+          }, 350);
+        }
+      } catch (err) {
+        window.showToast('Error: ' + err.message, 'error');
+      } finally {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = '<i class="fas fa-check-circle"></i> Confirm Simulated Contribution';
+        }
+      }
+    };
+  </script>
+</body>
+</html>

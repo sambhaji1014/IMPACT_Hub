@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact & NGO Registration — ImpactHub</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+  <!-- Site Header -->
+  <header class="site-header">
+    <div class="container nav-container">
+      <a href="index.html" class="brand-logo" style="text-decoration: none;">
+        <div class="brand-logo-svg">
+          <svg viewBox="0 0 24 24">
+            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+          </svg>
+        </div>
+        <div class="brand-text-wrap" style="margin-left: 0.6rem;">
+          Impact<span class="hub-accent">Hub</span>
+        </div>
+      </a>
+
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="campaigns.html">Campaigns</a></li>
+        <li><a href="ngos.html">NGO Directory</a></li>
+        <li><a href="volunteer.html">Volunteer</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="contact.html" class="active">Contact</a></li>
+        <li><a href="dashboard.html">Dashboard</a></li>
+      </ul>
+
+      <div class="nav-actions">
+        <button class="mobile-menu-btn" aria-label="Toggle menu"><i class="fas fa-bars"></i></button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Banner -->
+  <section class="section-pale" style="padding: 4.5rem 0 3.5rem 0; text-align: center;">
+    <div class="container container-sm">
+      <div class="section-badge"><i class="fas fa-paper-plane"></i> Get in Touch</div>
+      <h1 style="font-size: 2.6rem; margin-bottom: 1.25rem;">Connect With ImpactHub</h1>
+      <p style="font-size: 1.15rem; line-height: 1.6; color: var(--text-muted);">
+        Have questions about community volunteer drives, partnership inquiries, or registering your grassroots organization? Submit a message below.
+      </p>
+    </div>
+  </section>
+
+  <!-- Main Contact Section -->
+  <section style="padding: 3.5rem 0 5rem 0;">
+    <div class="container">
+      <div style="display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 3.5rem;">
+        
+        <!-- Contact & NGO Registration Form Card -->
+        <div class="calc-card" style="padding: 2.5rem; background: #FFFFFF; border: 1.5px solid var(--border-light); border-radius: var(--radius-xl); box-shadow: var(--shadow-sm);">
+          
+          <!-- Tab Switchers -->
+          <div style="display: flex; gap: 1rem; border-bottom: 1px solid var(--border-light); padding-bottom: 1rem; margin-bottom: 2rem;">
+            <button class="btn btn-sm btn-primary" id="tabGeneralBtn" type="button" onclick="switchFormTab('general')">
+              <i class="fas fa-envelope"></i> General Message
+            </button>
+            <button class="btn btn-sm btn-outline" id="tabNgoBtn" type="button" onclick="switchFormTab('ngo')">
+              <i class="fas fa-building"></i> Register Your NGO
+            </button>
+          </div>
+
+          <!-- General Contact Form -->
+          <form id="generalContactForm" novalidate>
+            <h3 style="margin-bottom: 0.35rem; font-size: 1.35rem;">Send Us a Message</h3>
+            <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 1.5rem;">
+              Fill in your details and message. Your submission will receive a tracked reference ticket.
+            </p>
+
+            <div class="form-group">
+              <label>Full Name *</label>
+              <input type="text" class="form-control" id="contactName" placeholder="Enter your full name" required>
+              <div class="error-msg" id="contactNameErr" style="display:none; color: #DC2626; font-size: 0.8rem; margin-top: 0.3rem;">Please enter your full name.</div>
+            </div>
+
+            <div class="form-group">
+              <label>Email Address *</label>
+              <input type="email" class="form-control" id="contactEmail" placeholder="your.email@example.com" required>
+              <div class="error-msg" id="contactEmailErr" style="display:none; color: #DC2626; font-size: 0.8rem; margin-top: 0.3rem;">Please enter a valid email address.</div>
+            </div>
+
+            <div class="form-group">
+              <label>Subject</label>
+              <input type="text" class="form-control" id="contactSubject" placeholder="Volunteer question, partnership, or general inquiry...">
+            </div>
+
+            <div class="form-group">
+              <label>Message *</label>
+              <textarea class="form-control" id="contactMessage" rows="4" placeholder="How can we help you?" required></textarea>
+              <div class="error-msg" id="contactMsgErr" style="display:none; color: #DC2626; font-size: 0.8rem; margin-top: 0.3rem;">Please enter a message of at least 10 characters.</div>
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 0.5rem;" id="sendContactBtn">
+              <i class="fas fa-paper-plane"></i> Send Message
+            </button>
+          </form>
+
+          <!-- NGO Onboarding Form (Hidden by default) -->
+          <form id="ngoRegisterForm" style="display: none;" novalidate>
+            <h3 style="margin-bottom: 0.35rem; font-size: 1.35rem;">Register Your Grassroots NGO</h3>
+            <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 1.5rem;">
+              Join verified organizations on ImpactHub and begin mobilizing volunteers and transparent campaigns.
+            </p>
+
+            <div class="form-group">
+              <label>Organization Name *</label>
+              <input type="text" class="form-control" id="regNgoName" placeholder="e.g. Pune River Revitalization Trust" required>
+              <div class="error-msg" id="regNgoNameErr" style="display:none; color: #DC2626; font-size: 0.8rem; margin-top: 0.3rem;">Organization name is required.</div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+              <div class="form-group">
+                <label>Primary Cause *</label>
+                <select class="form-control" id="regNgoCategory" required>
+                  <option value="Environment">Environment</option>
+                  <option value="Education">Education</option>
+                  <option value="Healthcare">Healthcare</option>
+                  <option value="Animal Welfare">Animal Welfare</option>
+                  <option value="Women Empowerment">Women Empowerment</option>
+                  <option value="Child Welfare">Child Welfare</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>City & State *</label>
+                <input type="text" class="form-control" id="regNgoLocation" placeholder="e.g. Pune, Maharashtra" required>
+                <div class="error-msg" id="regNgoLocErr" style="display:none; color: #DC2626; font-size: 0.8rem; margin-top: 0.3rem;">City and state are required.</div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Official Contact Email *</label>
+              <input type="email" class="form-control" id="regNgoEmail" placeholder="contact@punerivertrust.org" required>
+              <div class="error-msg" id="regNgoEmailErr" style="display:none; color: #DC2626; font-size: 0.8rem; margin-top: 0.3rem;">Please enter a valid official email.</div>
+            </div>
+
+            <div class="form-group">
+              <label>Brief Mission & Description *</label>
+              <textarea class="form-control" id="regNgoDesc" rows="3" placeholder="Describe your NGO's core mission and communities served..." required></textarea>
+              <div class="error-msg" id="regNgoDescErr" style="display:none; color: #DC2626; font-size: 0.8rem; margin-top: 0.3rem;">Please enter a mission description.</div>
+            </div>
+
+            <button type="submit" class="btn btn-green" style="width: 100%; margin-top: 0.5rem;" id="submitNgoBtn">
+              <i class="fas fa-check-circle"></i> Submit NGO Application
+            </button>
+          </form>
+
+        </div>
+
+        <!-- Contact Info & Channels -->
+        <div>
+          <h3 style="margin-bottom: 1.25rem;">Contact Information</h3>
+
+          <div style="display: flex; flex-direction: column; gap: 1.5rem; margin-bottom: 2.5rem;">
+            <div style="display: flex; gap: 1.25rem; align-items: flex-start;">
+              <div style="width: 44px; height: 44px; border-radius: 12px; background: var(--accent-green-light); color: var(--accent-green); display: flex; align-items: center; justify-content: center; font-size: 1.15rem; flex-shrink: 0;">
+                <i class="fas fa-envelope"></i>
+              </div>
+              <div>
+                <strong style="display: block; font-size: 0.95rem; margin-bottom: 0.2rem;">Email Support</strong>
+                <a href="mailto:support@impacthub.org" style="color: var(--text-muted); text-decoration: none; font-size: 0.88rem;">support@impacthub.org</a>
+              </div>
+            </div>
+
+            <div style="display: flex; gap: 1.25rem; align-items: flex-start;">
+              <div style="width: 44px; height: 44px; border-radius: 12px; background: var(--accent-green-light); color: var(--accent-green); display: flex; align-items: center; justify-content: center; font-size: 1.15rem; flex-shrink: 0;">
+                <i class="fas fa-map-marker-alt"></i>
+              </div>
+              <div>
+                <strong style="display: block; font-size: 0.95rem; margin-bottom: 0.2rem;">Community Operations</strong>
+                <span style="color: var(--text-muted); font-size: 0.88rem; line-height: 1.5; display: block;">Shivajinagar Community Hub, Pune, Maharashtra 411005</span>
+              </div>
+            </div>
+
+            <div style="display: flex; gap: 1.25rem; align-items: flex-start;">
+              <div style="width: 44px; height: 44px; border-radius: 12px; background: var(--accent-green-light); color: var(--accent-green); display: flex; align-items: center; justify-content: center; font-size: 1.15rem; flex-shrink: 0;">
+                <i class="fas fa-clock"></i>
+              </div>
+              <div>
+                <strong style="display: block; font-size: 0.95rem; margin-bottom: 0.2rem;">Operating Hours</strong>
+                <span style="color: var(--text-muted); font-size: 0.88rem; line-height: 1.5; display: block;">Monday – Saturday: 9:00 AM – 6:00 PM IST</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Submitted Messages Log (Session) -->
+          <div style="background: var(--bg-secondary); border: 1px solid var(--border-light); border-radius: var(--radius-lg); padding: 1.5rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+              <h4 style="font-size: 0.95rem; margin: 0; color: var(--text-main);"><i class="fas fa-history" style="color: var(--accent-green);"></i> Recent Messages</h4>
+              <span style="font-size: 0.75rem; color: var(--text-muted);">Active session tickets</span>
+            </div>
+            <div id="contactMessagesContainer" style="font-size: 0.85rem; color: var(--text-muted);">
+              <!-- Rendered dynamically -->
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Site Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col" style="max-width: 340px;">
+          <a href="index.html" class="brand-logo" style="text-decoration: none; margin-bottom: 0.85rem; display: inline-flex;">
+            <div class="brand-logo-svg" style="background: rgba(255,255,255,0.15);">
+              <svg viewBox="0 0 24 24">
+                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="#FFFFFF"/>
+              </svg>
+            </div>
+            <div class="brand-text-wrap" style="color: #FFFFFF; margin-left: 0.6rem;">
+              Impact<span style="color: #86EFAC;">Hub</span>
+            </div>
+          </a>
+          <p style="font-size: 0.88rem; line-height: 1.6; color: #9CA3AF; margin-bottom: 1rem;">
+            A transparent platform connecting non-governmental organizations, donors, and volunteers to create verifiable social progress.
+          </p>
+          <div style="font-size: 0.78rem; color: #9CA3AF; background: rgba(255,255,255,0.06); padding: 0.6rem 0.85rem; border-radius: var(--radius-sm); border: 1px solid rgba(255,255,255,0.1);">
+            <i class="fas fa-flask" style="color: #86EFAC; margin-right: 0.35rem;"></i>
+            <strong>Evaluation Environment:</strong> Simulated contributions and activity tracking for functional demonstration.
+          </div>
+        </div>
+
+        <div class="footer-col">
+          <h4>Platform</h4>
+          <ul class="footer-links">
+            <li><a href="campaigns.html">Active Campaigns</a></li>
+            <li><a href="ngos.html">NGO Directory</a></li>
+            <li><a href="volunteer.html">Volunteer Drives</a></li>
+            <li><a href="dashboard.html">Role Dashboard</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Accounts</h4>
+          <ul class="footer-links">
+            <li><a href="login.html">Sign In</a></li>
+            <li><a href="signup.html">Create Account</a></li>
+            <li><a href="about.html">About Platform</a></li>
+            <li><a href="contact.html">Contact & Support</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Trust & Ethics</h4>
+          <ul class="footer-links">
+            <li><a href="impact.html">Impact Verification</a></li>
+            <li><a href="about.html">Financial Transparency</a></li>
+            <li><a href="contact.html">Community Guidelines</a></li>
+            <li><a href="about.html#governance">NGO Due Diligence</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <span>&copy; 2026 ImpactHub. All rights reserved.</span>
+        <span>Transparent Philanthropy & Community Mobilization Platform</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/api.js"></script>
+  <script src="js/store.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    function switchFormTab(type) {
+      const generalForm = document.getElementById('generalContactForm');
+      const ngoForm = document.getElementById('ngoRegisterForm');
+      const tabGeneralBtn = document.getElementById('tabGeneralBtn');
+      const tabNgoBtn = document.getElementById('tabNgoBtn');
+
+      if (type === 'general') {
+        generalForm.style.display = 'block';
+        ngoForm.style.display = 'none';
+        tabGeneralBtn.className = 'btn btn-sm btn-primary';
+        tabNgoBtn.className = 'btn btn-sm btn-outline';
+      } else {
+        generalForm.style.display = 'none';
+        ngoForm.style.display = 'block';
+        tabGeneralBtn.className = 'btn btn-sm btn-outline';
+        tabNgoBtn.className = 'btn btn-sm btn-primary';
+      }
+    }
+
+    function renderContactMessagesLog() {
+      const container = document.getElementById('contactMessagesContainer');
+      if (!container) return;
+
+      const msgs = window.HCStore.getContactMessages();
+      if (!msgs || msgs.length === 0) {
+        container.innerHTML = `<span style="font-style: italic;">No inquiries logged in this browser session yet.</span>`;
+        return;
+      }
+
+      container.innerHTML = `
+        <div style="display: flex; flex-direction: column; gap: 0.5rem; max-height: 180px; overflow-y: auto;">
+          ${msgs.map(m => `
+            <div style="background: var(--bg-primary); border: 1px solid var(--border-light); border-radius: var(--radius-sm); padding: 0.6rem 0.8rem;">
+              <div style="display: flex; justify-content: space-between; font-weight: 600; color: var(--text-main); margin-bottom: 0.2rem;">
+                <span>${m.ticketId} &bull; ${window.escapeHTML(m.subject || 'General Inquiry')}</span>
+                <span style="font-size: 0.75rem; color: var(--text-muted);">${m.date}</span>
+              </div>
+              <div style="font-size: 0.78rem; color: var(--text-muted); line-height: 1.4;">
+                ${window.escapeHTML(m.message.length > 80 ? m.message.slice(0, 80) + '...' : m.message)}
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const generalForm = document.getElementById('generalContactForm');
+      const ngoForm = document.getElementById('ngoRegisterForm');
+
+      // Prefill if user logged in
+      const u = window.HCStore.getCurrentUser();
+      if (u) {
+        const nameInput = document.getElementById('contactName');
+        const emailInput = document.getElementById('contactEmail');
+        if (nameInput) nameInput.value = u.name;
+        if (emailInput) emailInput.value = u.email;
+      }
+
+      renderContactMessagesLog();
+
+      // General Contact Form Submission & Validation
+      if (generalForm) {
+        generalForm.addEventListener('submit', (e) => {
+          e.preventDefault();
+
+          const name = document.getElementById('contactName').value.trim();
+          const email = document.getElementById('contactEmail').value.trim();
+          const subject = document.getElementById('contactSubject').value.trim();
+          const message = document.getElementById('contactMessage').value.trim();
+
+          const nameErr = document.getElementById('contactNameErr');
+          const emailErr = document.getElementById('contactEmailErr');
+          const msgErr = document.getElementById('contactMsgErr');
+
+          let hasError = false;
+
+          // Validation
+          if (!name) {
+            nameErr.style.display = 'block';
+            hasError = true;
+          } else {
+            nameErr.style.display = 'none';
+          }
+
+          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          if (!email || !emailRegex.test(email)) {
+            emailErr.style.display = 'block';
+            hasError = true;
+          } else {
+            emailErr.style.display = 'none';
+          }
+
+          if (!message || message.length < 10) {
+            msgErr.style.display = 'block';
+            hasError = true;
+          } else {
+            msgErr.style.display = 'none';
+          }
+
+          if (hasError) return;
+
+          // Save to HCStore
+          const savedMsg = window.HCStore.saveContactMessage({
+            name,
+            email,
+            subject: subject || 'General Inquiry',
+            message
+          });
+
+          // Sync with backend API
+          if (window.ImpactHubAPI) {
+            window.ImpactHubAPI.sendContactMessage({
+              name,
+              email,
+              subject: subject || 'General Inquiry',
+              message
+            }).catch(() => {});
+          }
+
+          window.showToast(`Message Sent! Ticket #${savedMsg.ticketId} logged successfully.`, 'success', 'fas fa-paper-plane');
+          generalForm.reset();
+          renderContactMessagesLog();
+        });
+      }
+
+      // NGO Register Form Submission
+      if (ngoForm) {
+        ngoForm.addEventListener('submit', (e) => {
+          e.preventDefault();
+
+          const name = document.getElementById('regNgoName').value.trim();
+          const category = document.getElementById('regNgoCategory').value;
+          const location = document.getElementById('regNgoLocation').value.trim();
+          const desc = document.getElementById('regNgoDesc').value.trim();
+          const email = document.getElementById('regNgoEmail').value.trim();
+
+          const nameErr = document.getElementById('regNgoNameErr');
+          const locErr = document.getElementById('regNgoLocErr');
+          const emailErr = document.getElementById('regNgoEmailErr');
+          const descErr = document.getElementById('regNgoDescErr');
+
+          let hasError = false;
+          if (!name) { nameErr.style.display = 'block'; hasError = true; } else { nameErr.style.display = 'none'; }
+          if (!location) { locErr.style.display = 'block'; hasError = true; } else { locErr.style.display = 'none'; }
+          if (!email) { emailErr.style.display = 'block'; hasError = true; } else { emailErr.style.display = 'none'; }
+          if (!desc) { descErr.style.display = 'block'; hasError = true; } else { descErr.style.display = 'none'; }
+
+          if (hasError) return;
+
+          const newNgo = window.HCStore.addNGO({
+            name,
+            category,
+            location,
+            description: desc,
+            verified: true,
+            logo: 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=150&auto=format&fit=crop&q=80',
+            banner: 'https://images.unsplash.com/photo-1511497584788-87676104235f?w=600&auto=format&fit=crop&q=80',
+            volunteersCount: 1,
+            activeCampaignsCount: 0,
+            foundedYear: 2026
+          });
+
+          window.showToast(`Organization "${newNgo.name}" submitted! Directing to registration.`, 'success', 'fas fa-building');
+          ngoForm.reset();
+
+          setTimeout(() => {
+            window.location.href = `signup.html?role=ngo&org=${encodeURIComponent(name)}&city=${encodeURIComponent(location)}`;
+          }, 1200);
+        });
+      }
+    });
+  </script>
+</body>
+</html>

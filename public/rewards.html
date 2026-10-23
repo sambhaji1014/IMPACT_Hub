@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Impact Leaderboard & Rewards — ImpactHub</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/responsive.css">
+  <style>
+    .leader-tab-btn {
+      background: none;
+      border: none;
+      padding: 0.85rem 1.5rem;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      cursor: pointer;
+      border-bottom: 3px solid transparent;
+      transition: all 0.2s;
+    }
+    .leader-tab-btn.active {
+      color: var(--accent-green);
+      border-bottom-color: var(--accent-green);
+    }
+    .badge-card {
+      background: #FFFFFF;
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-lg);
+      padding: 1.25rem;
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .badge-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+    .badge-icon-wrap {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: var(--accent-green-light);
+      color: var(--accent-green);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      flex-shrink: 0;
+    }
+    .badge-card.locked .badge-icon-wrap {
+      background: #F1F5F9;
+      color: #94A3B8;
+    }
+    .badge-card.locked {
+      opacity: 0.75;
+    }
+    .rank-medal {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+    .rank-1 { background: #FEF3C7; color: #D97706; border: 1.5px solid #F59E0B; }
+    .rank-2 { background: #F1F5F9; color: #475569; border: 1.5px solid #94A3B8; }
+    .rank-3 { background: #FFEDD5; color: #C2410C; border: 1.5px solid #FB923C; }
+    .rank-other { background: var(--bg-primary); color: var(--text-muted); }
+  </style>
+</head>
+<body style="background: var(--bg-secondary); min-height: 100vh; display: flex; flex-direction: column;">
+
+  <!-- Site Header -->
+  <header class="site-header">
+    <div class="container nav-container">
+      <a href="/" class="brand-logo" style="text-decoration: none;">
+        <div class="brand-logo-svg">
+          <svg viewBox="0 0 24 24">
+            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+          </svg>
+        </div>
+        <div class="brand-text-wrap" style="margin-left: 0.6rem;">
+          Impact<span class="hub-accent">Hub</span>
+        </div>
+      </a>
+
+      <ul class="nav-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/campaigns">Campaigns</a></li>
+        <li><a href="/drives">Volunteer Drives</a></li>
+        <li><a href="/ngos">NGO Directory</a></li>
+        <li><a href="/leaderboard" class="active">Leaderboard</a></li>
+        <li><a href="/dashboard">Dashboard</a></li>
+      </ul>
+
+      <div class="nav-actions">
+        <button class="mobile-menu-btn" aria-label="Toggle menu"><i class="fas fa-bars"></i></button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Header -->
+  <section style="background: linear-gradient(135deg, #064E3B 0%, #065F46 100%); color: #FFFFFF; padding: 3.5rem 0 3rem 0;">
+    <div class="container text-center">
+      <span class="badge" style="background: rgba(255, 255, 255, 0.15); color: #A7F3D0; font-size: 0.85rem; padding: 0.35rem 0.85rem; margin-bottom: 0.75rem;">
+        <i class="fas fa-award"></i> Verified Merit & Recognition System
+      </span>
+      <h1 style="font-size: 2.5rem; margin-bottom: 0.75rem; color: #FFFFFF; font-family: 'Plus Jakarta Sans', sans-serif;">
+        Impact Leaderboard & Rewards
+      </h1>
+      <p style="max-width: 650px; margin: 0 auto; color: #D1FAE5; font-size: 1.05rem; line-height: 1.6;">
+        Celebrating grassroots changemakers. Points are awarded exclusively for verified ground attendance and completed server-verified contributions.
+      </p>
+
+      <!-- Demo Disclaimer Badge -->
+      <div style="display: inline-flex; align-items: center; gap: 0.5rem; background: rgba(254, 243, 199, 0.2); border: 1px solid rgba(245, 158, 11, 0.4); border-radius: var(--radius-pill); padding: 0.3rem 0.9rem; font-size: 0.78rem; color: #FDE68A; margin-top: 1.25rem;">
+        <i class="fas fa-info-circle"></i> Demo Data &mdash; Public recognition rankings updated in real-time
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Content -->
+  <main style="flex: 1; padding: 2.5rem 0 4rem 0;">
+    <div class="container">
+
+      <!-- Navigation Tabs -->
+      <div style="display: flex; gap: 0.5rem; border-bottom: 1px solid var(--border-light); margin-bottom: 2rem;">
+        <button class="leader-tab-btn active" id="tabBtnVolunteers" onclick="switchLeaderTab('volunteers')">
+          <i class="fas fa-hands-helping"></i> Top Volunteers
+        </button>
+        <button class="leader-tab-btn" id="tabBtnDonors" onclick="switchLeaderTab('donors')">
+          <i class="fas fa-heart"></i> Top Donors
+        </button>
+        <button class="leader-tab-btn" id="tabBtnBadges" onclick="switchLeaderTab('badges')">
+          <i class="fas fa-medal"></i> Recognition Badges & Tiers
+        </button>
+      </div>
+
+      <!-- View 1: Volunteers Leaderboard -->
+      <div id="viewVolunteers">
+        <div style="background: #FFFFFF; border: 1px solid var(--border-light); border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); overflow: hidden;">
+          <div style="padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border-light); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
+            <div>
+              <h2 style="font-size: 1.2rem; color: var(--text-main); margin: 0;">Top Volunteer Changemakers</h2>
+              <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0.2rem 0 0 0;">Ranked by verified service hours (10 pts/hr) and completed drive milestones.</p>
+            </div>
+            <a href="/drives" class="btn btn-sm btn-primary"><i class="fas fa-plus"></i> Join Upcoming Drives</a>
+          </div>
+
+          <div style="overflow-x: auto;">
+            <table class="custom-table" style="width: 100%;">
+              <thead>
+                <tr>
+                  <th style="width: 70px;">Rank</th>
+                  <th>Volunteer</th>
+                  <th>Location</th>
+                  <th>Rank / Medal</th>
+                  <th>Confirmed Hours</th>
+                  <th style="text-align: right;">Impact Points</th>
+                </tr>
+              </thead>
+              <tbody id="volunteersLeaderboardTbody">
+                <tr><td colspan="6" style="text-align: center; padding: 2rem; color: var(--text-muted);">Loading rankings...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- View 2: Donors Leaderboard -->
+      <div id="viewDonors" style="display: none;">
+        <div style="background: #FFFFFF; border: 1px solid var(--border-light); border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); overflow: hidden;">
+          <div style="padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border-light); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
+            <div>
+              <h2 style="font-size: 1.2rem; color: var(--text-main); margin: 0;">Philanthropic Supporters</h2>
+              <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0.2rem 0 0 0;">Ranked by confirmed contributions (1 pt per ₹100 donated) to verified campaigns.</p>
+            </div>
+            <a href="/campaigns" class="btn btn-sm btn-green"><i class="fas fa-heart"></i> Support a Campaign</a>
+          </div>
+
+          <div style="overflow-x: auto;">
+            <table class="custom-table" style="width: 100%;">
+              <thead>
+                <tr>
+                  <th style="width: 70px;">Rank</th>
+                  <th>Donor</th>
+                  <th>Location</th>
+                  <th>Supporter Tier</th>
+                  <th>Total Contributed</th>
+                  <th style="text-align: right;">Impact Points</th>
+                </tr>
+              </thead>
+              <tbody id="donorsLeaderboardTbody">
+                <tr><td colspan="6" style="text-align: center; padding: 2rem; color: var(--text-muted);">Loading rankings...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- View 3: Badges & Tiers System -->
+      <div id="viewBadges" style="display: none;">
+        
+        <!-- Rules Summary Grid -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
+          <div style="background: #FFFFFF; border: 1px solid var(--border-light); border-radius: var(--radius-lg); padding: 1.5rem; box-shadow: var(--shadow-sm);">
+            <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem;">
+              <div style="width: 40px; height: 40px; border-radius: 50%; background: var(--accent-green-light); color: var(--accent-green); display: flex; align-items: center; justify-content: center; font-size: 1.1rem;">
+                <i class="fas fa-hands-helping"></i>
+              </div>
+              <h3 style="font-size: 1.1rem; margin: 0;">Volunteer Level Tiers</h3>
+            </div>
+            <p style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 1rem;">
+              Volunteers earn <strong>10 points</strong> for every confirmed service hour logged by partner NGOs, plus bonus points for first drives and streaks.
+            </p>
+            <ul style="font-size: 0.85rem; color: var(--text-main); padding-left: 1.25rem; line-height: 1.8;">
+              <li><strong>Bronze Changemaker:</strong> 0+ hours</li>
+              <li><strong>Silver Advocate:</strong> 15+ confirmed hours</li>
+              <li><strong>Gold Leader:</strong> 35+ confirmed hours</li>
+              <li><strong>Platinum Guardian:</strong> 70+ confirmed hours</li>
+            </ul>
+          </div>
+
+          <div style="background: #FFFFFF; border: 1px solid var(--border-light); border-radius: var(--radius-lg); padding: 1.5rem; box-shadow: var(--shadow-sm);">
+            <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem;">
+              <div style="width: 40px; height: 40px; border-radius: 50%; background: #EFF6FF; color: #2563EB; display: flex; align-items: center; justify-content: center; font-size: 1.1rem;">
+                <i class="fas fa-heart"></i>
+              </div>
+              <h3 style="font-size: 1.1rem; margin: 0;">Donor Recognition Tiers</h3>
+            </div>
+            <p style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 1rem;">
+              Donors earn <strong>1 point per ₹100</strong> contributed to verified causes. Donations remain transparent while respecting anonymous mode settings.
+            </p>
+            <ul style="font-size: 0.85rem; color: var(--text-main); padding-left: 1.25rem; line-height: 1.8;">
+              <li><strong>Community Supporter:</strong> Up to ₹2,500</li>
+              <li><strong>Cause Patron:</strong> ₹2,500 – ₹10,000</li>
+              <li><strong>Impact Champion:</strong> ₹10,000 – ₹50,000</li>
+              <li><strong>Ecosystem Guardian:</strong> ₹50,000+</li>
+            </ul>
+          </div>
+        </div>
+
+        <h3 style="font-size: 1.25rem; color: var(--text-main); margin-bottom: 1rem;">All Recognition Badges</h3>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.25rem;" id="badgesGalleryGrid">
+          <!-- Rendered dynamically -->
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer style="background: #FFFFFF; border-top: 1px solid var(--border-light); padding: 2rem 0; font-size: 0.88rem; color: var(--text-muted);">
+    <div class="container text-center">
+      &copy; 2026 ImpactHub. Bridging the gap between NGOs, Donors, and Volunteers.
+    </div>
+  </footer>
+
+  <script src="js/api.js"></script>
+  <script src="js/store.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    let leaderboardData = null;
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      await loadLeaderboard();
+      await loadBadges();
+    });
+
+    function switchLeaderTab(tabName) {
+      ['volunteers', 'donors', 'badges'].forEach(t => {
+        const view = document.getElementById('view' + t.charAt(0).toUpperCase() + t.slice(1));
+        const btn = document.getElementById('tabBtn' + t.charAt(0).toUpperCase() + t.slice(1));
+        if (view) view.style.display = t === tabName ? 'block' : 'none';
+        if (btn) btn.classList.toggle('active', t === tabName);
+      });
+    }
+
+    async function loadLeaderboard() {
+      try {
+        const res = await fetch('/api/v1/rewards/leaderboard');
+        const json = await res.json();
+        if (json.success) {
+          leaderboardData = json;
+          renderVolunteersTable(json.volunteers || []);
+          renderDonorsTable(json.donors || []);
+        }
+      } catch (err) {
+        console.warn('Leaderboard fetch fallback:', err);
+      }
+    }
+
+    function renderVolunteersTable(vols) {
+      const tbody = document.getElementById('volunteersLeaderboardTbody');
+      if (!tbody) return;
+
+      if (!vols || vols.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 2rem; color: var(--text-muted);">No volunteer records logged yet.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = vols.map(v => {
+        const medalClass = v.rank === 1 ? 'rank-1' : (v.rank === 2 ? 'rank-2' : (v.rank === 3 ? 'rank-3' : 'rank-other'));
+        return `
+          <tr>
+            <td><span class="rank-medal ${medalClass}">${v.rank}</span></td>
+            <td>
+              <div style="display: flex; align-items: center; gap: 0.65rem;">
+                <div style="width: 32px; height: 32px; border-radius: 50%; background: var(--accent-green); color: #FFF; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.8rem;">
+                  ${window.escapeHTML(v.name.charAt(0).toUpperCase())}
+                </div>
+                <strong>${window.escapeHTML(v.name)}</strong>
+              </div>
+            </td>
+            <td style="color: var(--text-muted);"><i class="fas fa-map-marker-alt" style="color: var(--accent-green);"></i> ${window.escapeHTML(v.city)}</td>
+            <td><span class="badge" style="background: var(--accent-green-light); color: var(--accent-green);">${v.level}</span></td>
+            <td><strong>${v.totalHours} hrs</strong></td>
+            <td style="text-align: right;"><strong style="color: var(--accent-green); font-size: 1.05rem;">${v.points} pts</strong></td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function renderDonorsTable(donors) {
+      const tbody = document.getElementById('donorsLeaderboardTbody');
+      if (!tbody) return;
+
+      if (!donors || donors.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 2rem; color: var(--text-muted);">No donor records logged yet.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = donors.map(d => {
+        const medalClass = d.rank === 1 ? 'rank-1' : (d.rank === 2 ? 'rank-2' : (d.rank === 3 ? 'rank-3' : 'rank-other'));
+        return `
+          <tr>
+            <td><span class="rank-medal ${medalClass}">${d.rank}</span></td>
+            <td>
+              <div style="display: flex; align-items: center; gap: 0.65rem;">
+                <div style="width: 32px; height: 32px; border-radius: 50%; background: #2563EB; color: #FFF; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.8rem;">
+                  ${window.escapeHTML(d.name.charAt(0).toUpperCase())}
+                </div>
+                <strong>${window.escapeHTML(d.name)}</strong>
+              </div>
+            </td>
+            <td style="color: var(--text-muted);"><i class="fas fa-map-marker-alt" style="color: #2563EB;"></i> ${window.escapeHTML(d.city)}</td>
+            <td><span class="badge" style="background: #EFF6FF; color: #2563EB;">${d.tier}</span></td>
+            <td><strong>₹${Number(d.totalDonated).toLocaleString('en-IN')}</strong></td>
+            <td style="text-align: right;"><strong style="color: #2563EB; font-size: 1.05rem;">${d.points} pts</strong></td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    async function loadBadges() {
+      const grid = document.getElementById('badgesGalleryGrid');
+      if (!grid) return;
+
+      try {
+        let badges = [];
+        const res = await fetch('/api/v1/rewards/me');
+        if (res.ok) {
+          const json = await res.json();
+          if (json.success && json.badges) {
+            badges = json.badges;
+          }
+        }
+
+        if (badges.length === 0) {
+          // Default badge catalog showcase
+          badges = [
+            { name: 'First Drive', icon: 'fas fa-seedling', description: 'Completed first verified volunteer initiative', criteria: 'Complete 1 drive', unlocked: true },
+            { name: '10 Hours Club', icon: 'fas fa-clock', description: 'Contributed 10 confirmed field hours', criteria: 'Accumulate 10 hrs', unlocked: true },
+            { name: 'Weekend Warrior', icon: 'fas fa-calendar-check', description: 'Joined 3 weekend volunteer drives', criteria: '3 weekend drives', unlocked: false },
+            { name: 'First Contribution', icon: 'fas fa-heart', description: 'Made first verified cause donation', criteria: 'Complete 1 donation', unlocked: true },
+            { name: 'Generous Heart', icon: 'fas fa-hands', description: 'Contributed ₹5,000+ across verified drives', criteria: 'Donate ₹5,000+', unlocked: false },
+            { name: 'Cause Champion', icon: 'fas fa-trophy', description: 'Top contributor in your local district', criteria: 'High impact score', unlocked: false }
+          ];
+        }
+
+        grid.innerHTML = badges.map(b => `
+          <div class="badge-card ${b.unlocked ? '' : 'locked'}">
+            <div class="badge-icon-wrap">
+              <i class="${b.icon || 'fas fa-award'}"></i>
+            </div>
+            <div>
+              <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.2rem;">
+                <h4 style="font-size: 1rem; margin: 0; color: var(--text-main);">${window.escapeHTML(b.name)}</h4>
+                ${b.unlocked ? '<span class="badge" style="background: var(--accent-green-light); color: var(--accent-green); font-size: 0.7rem;"><i class="fas fa-check"></i> Unlocked</span>' : '<span class="badge" style="background: #F1F5F9; color: #64748B; font-size: 0.7rem;"><i class="fas fa-lock"></i> Locked</span>'}
+              </div>
+              <p style="font-size: 0.84rem; color: var(--text-muted); margin: 0 0 0.35rem 0; line-height: 1.4;">${window.escapeHTML(b.description)}</p>
+              <div style="font-size: 0.75rem; color: var(--text-muted); font-style: italic;">
+                Criteria: ${window.escapeHTML(b.criteria || 'Participation')}
+              </div>
+            </div>
+          </div>
+        `).join('');
+      } catch (e) {
+        console.warn('Badges load error:', e);
+      }
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Account Portal — ImpactHub</title>
+  <meta name="description" content="Sign in or register for ImpactHub. Connect as a volunteer, donor, or non-profit organization.">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/responsive.css">
+
+  <style>
+    .auth-page-wrap {
+      min-height: calc(100vh - 160px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem 1rem;
+      background: linear-gradient(135deg, #F0FDF4 0%, #FEF3C7 100%);
+    }
+    .auth-box {
+      background: #FFFFFF;
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-lg);
+      width: 100%;
+      max-width: 540px;
+      overflow: hidden;
+    }
+    .auth-tabs {
+      display: flex;
+      border-bottom: 1px solid var(--border-light);
+      background: #F8FAFC;
+    }
+    .auth-tab-btn {
+      flex: 1;
+      padding: 1.15rem 1rem;
+      border: none;
+      background: transparent;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      transition: all 0.2s ease;
+      border-bottom: 3px solid transparent;
+    }
+    .auth-tab-btn.active {
+      background: #FFFFFF;
+      color: var(--accent-green);
+      border-bottom-color: var(--accent-green);
+    }
+    .auth-tab-content {
+      padding: 2rem 2.25rem;
+    }
+    .role-selector-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+    .role-option-card {
+      border: 1.5px solid var(--border-light);
+      border-radius: var(--radius-md);
+      padding: 0.85rem 0.5rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      background: #FFFFFF;
+    }
+    .role-option-card:hover {
+      border-color: var(--accent-green);
+      background: #F0FDF4;
+    }
+    .role-option-card.selected {
+      border-color: var(--accent-green);
+      background: #ECFDF5;
+      box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+    }
+    .role-option-icon {
+      font-size: 1.35rem;
+      margin-bottom: 0.35rem;
+      color: var(--accent-green);
+    }
+    .password-strength-bar {
+      height: 4px;
+      border-radius: 4px;
+      background: #E2E8F0;
+      margin-top: 0.4rem;
+      overflow: hidden;
+    }
+    .password-strength-fill {
+      height: 100%;
+      width: 0;
+      transition: all 0.3s ease;
+    }
+    .field-hint {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 0.25rem;
+    }
+    .field-error {
+      font-size: 0.75rem;
+      color: #DC2626;
+      margin-top: 0.25rem;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Site Header -->
+  <header class="site-header">
+    <div class="container nav-container">
+      <a href="/" class="brand-logo" style="text-decoration: none;">
+        <div class="brand-logo-svg">
+          <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+        </div>
+        <div class="brand-text-wrap" style="margin-left: 0.6rem;">
+          Impact<span class="hub-accent">Hub</span>
+        </div>
+      </a>
+
+      <ul class="nav-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/campaigns">Campaigns</a></li>
+        <li><a href="/drives">Volunteer Drives</a></li>
+        <li><a href="/ngos">NGO Directory</a></li>
+        <li><a href="/leaderboard">Leaderboard</a></li>
+        <li><a href="/about">About</a></li>
+        <li><a href="/contact">Contact</a></li>
+      </ul>
+
+      <div class="nav-actions">
+        <a href="/" class="btn btn-sm btn-outline">&larr; Back to Platform</a>
+        <button class="mobile-menu-btn" aria-label="Toggle menu"><i class="fas fa-bars"></i></button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Auth Wrapper -->
+  <div class="auth-page-wrap">
+    <div class="auth-box">
+      <!-- Tabs -->
+      <div class="auth-tabs" id="authTabsNav">
+        <button class="auth-tab-btn active" id="tabSignInBtn" onclick="switchAuthMode('signin')">
+          <i class="fas fa-sign-in-alt"></i> Sign In
+        </button>
+        <button class="auth-tab-btn" id="tabSignUpBtn" onclick="switchAuthMode('signup')">
+          <i class="fas fa-user-plus"></i> Create Account
+        </button>
+      </div>
+
+      <!-- Tab 1: Sign In -->
+      <div class="auth-tab-content" id="signInPane">
+        <div style="margin-bottom: 1.5rem; text-align: center;">
+          <h2 style="font-size: 1.45rem; margin: 0 0 0.35rem 0; color: var(--text-main);">Welcome Back</h2>
+          <p style="font-size: 0.88rem; color: var(--text-muted); margin: 0;">Sign in to your verified ImpactHub account.</p>
+        </div>
+
+        <form id="signInForm" novalidate>
+          <div class="form-group" style="margin-bottom: 1rem;">
+            <label for="loginEmail" style="font-size: 0.85rem; font-weight: 600; display: block; margin-bottom: 0.35rem;">Email Address *</label>
+            <input type="email" id="loginEmail" class="form-control" placeholder="you@example.com" required autocomplete="email">
+            <div class="field-error" id="loginEmailError"></div>
+          </div>
+
+          <div class="form-group" style="margin-bottom: 1rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
+              <label for="loginPassword" style="font-size: 0.85rem; font-weight: 600;">Password *</label>
+              <a href="#" style="font-size: 0.78rem; color: var(--accent-green); font-weight: 600; text-decoration: none;" onclick="triggerForgotPassword(event)">Forgot Password?</a>
+            </div>
+            <div style="position: relative;">
+              <input type="password" id="loginPassword" class="form-control" placeholder="Enter password" required style="padding-right: 2.5rem;" autocomplete="current-password">
+              <button type="button" aria-label="Toggle password visibility" onclick="togglePassVisibility('loginPassword', this)" style="position: absolute; right: 0.75rem; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: var(--text-muted);">
+                <i class="fas fa-eye"></i>
+              </button>
+            </div>
+            <div class="field-error" id="loginPasswordError"></div>
+          </div>
+
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem;">
+            <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; color: var(--text-main); cursor: pointer; margin: 0;">
+              <input type="checkbox" id="loginRememberMe" checked style="accent-color: var(--accent-green);">
+              <span>Remember me for 30 days</span>
+            </label>
+          </div>
+
+          <div id="loginAlertBox" style="display: none; padding: 0.75rem 1rem; border-radius: var(--radius-sm); font-size: 0.85rem; margin-bottom: 1rem;"></div>
+
+          <button type="submit" class="btn btn-primary btn-lg" id="loginSubmitBtn" style="width: 100%;">
+            <i class="fas fa-sign-in-alt"></i> Sign In to ImpactHub
+          </button>
+        </form>
+
+        <div style="margin-top: 1.5rem; text-align: center; font-size: 0.85rem; color: var(--text-muted);">
+          Don't have an account yet? <a href="#" style="color: var(--accent-green); font-weight: 600; text-decoration: none;" onclick="event.preventDefault(); switchAuthMode('signup');">Sign up here</a>
+        </div>
+      </div>
+
+      <!-- Tab 2: Sign Up -->
+      <div class="auth-tab-content" id="signUpPane" style="display: none;">
+        <div style="margin-bottom: 1.25rem; text-align: center;">
+          <h2 style="font-size: 1.45rem; margin: 0 0 0.35rem 0; color: var(--text-main);">Join ImpactHub</h2>
+          <p style="font-size: 0.88rem; color: var(--text-muted); margin: 0;">Select your role once at registration. One account = one role.</p>
+        </div>
+
+        <form id="signUpForm" novalidate>
+          <!-- Role Selector (Admin is NEVER offered) -->
+          <label style="font-size: 0.85rem; font-weight: 600; display: block; margin-bottom: 0.5rem;">Select Your Role *</label>
+          <div class="role-selector-grid">
+            <div class="role-option-card selected" data-role="volunteer" onclick="selectRole('volunteer')">
+              <div class="role-option-icon"><i class="fas fa-hands-helping"></i></div>
+              <strong style="font-size: 0.85rem; display: block;">Volunteer</strong>
+              <span style="font-size: 0.72rem; color: var(--text-muted);">Join Drives</span>
+            </div>
+            <div class="role-option-card" data-role="donor" onclick="selectRole('donor')">
+              <div class="role-option-icon"><i class="fas fa-heart"></i></div>
+              <strong style="font-size: 0.85rem; display: block;">Donor</strong>
+              <span style="font-size: 0.72rem; color: var(--text-muted);">Support Causes</span>
+            </div>
+            <div class="role-option-card" data-role="ngo" onclick="selectRole('ngo')">
+              <div class="role-option-icon"><i class="fas fa-building"></i></div>
+              <strong style="font-size: 0.85rem; display: block;">NGO</strong>
+              <span style="font-size: 0.72rem; color: var(--text-muted);">Host Drives</span>
+            </div>
+          </div>
+          <input type="hidden" id="signupRole" value="volunteer">
+
+          <div class="form-group" style="margin-bottom: 1rem;">
+            <label for="signupName" style="font-size: 0.85rem; font-weight: 600; display: block; margin-bottom: 0.35rem;">Full Name *</label>
+            <input type="text" id="signupName" class="form-control" placeholder="e.g. Maya Deshmukh" required autocomplete="name">
+            <div class="field-error" id="signupNameError"></div>
+          </div>
+
+          <div class="form-group" style="margin-bottom: 1rem;">
+            <label for="signupEmail" style="font-size: 0.85rem; font-weight: 600; display: block; margin-bottom: 0.35rem;">Email Address *</label>
+            <input type="email" id="signupEmail" class="form-control" placeholder="maya@example.com" required autocomplete="email">
+            <div class="field-error" id="signupEmailError"></div>
+          </div>
+
+          <!-- NGO Specific Fields -->
+          <div id="ngoFieldsContainer" style="display: none; background: #F8FAFC; padding: 1.15rem; border-radius: var(--radius-md); border: 1px solid var(--border-light); margin-bottom: 1rem;">
+            <div class="form-group" style="margin-bottom: 0.75rem;">
+              <label for="signupOrgName" style="font-size: 0.82rem; font-weight: 600;">Organization Name *</label>
+              <input type="text" id="signupOrgName" class="form-control" placeholder="e.g. Sahyadri Wildlife Trust">
+              <div class="field-error" id="signupOrgNameError"></div>
+            </div>
+            <div class="form-group" style="margin-bottom: 0.75rem;">
+              <label for="signupRegNo" style="font-size: 0.82rem; font-weight: 600;">Society / Trust Reg. No. *</label>
+              <input type="text" id="signupRegNo" class="form-control" placeholder="e.g. MH/PUN/2026/0891">
+              <div class="field-error" id="signupRegNoError"></div>
+            </div>
+            <div class="form-group" style="margin-bottom: 0.75rem;">
+              <label for="signupWebsite" style="font-size: 0.82rem; font-weight: 600;">Official Website (Optional)</label>
+              <input type="url" id="signupWebsite" class="form-control" placeholder="https://sahyadri-trust.org">
+            </div>
+            <div class="form-group" style="margin-bottom: 0.5rem;">
+              <label for="signupCause" style="font-size: 0.82rem; font-weight: 600;">Primary Focus / Cause *</label>
+              <select id="signupCause" class="form-control">
+                <option value="Environment">Environment & Conservation</option>
+                <option value="Education">Education & Literacy</option>
+                <option value="Healthcare">Healthcare & Diagnostics</option>
+                <option value="Animal Welfare">Animal Welfare & Shelter</option>
+                <option value="Women Empowerment">Women Empowerment</option>
+                <option value="Community Development">Community Development</option>
+              </select>
+            </div>
+            <div style="font-size: 0.75rem; color: #B45309; margin-top: 0.5rem;">
+              <i class="fas fa-info-circle"></i> NGO accounts start with <strong>PENDING</strong> status until reviewed by administrators.
+            </div>
+          </div>
+
+          <div class="form-group" style="margin-bottom: 1rem;">
+            <label for="signupPassword" style="font-size: 0.85rem; font-weight: 600; display: block; margin-bottom: 0.35rem;">Password *</label>
+            <div style="position: relative;">
+              <input type="password" id="signupPassword" class="form-control" placeholder="Min. 8 chars, 1 letter & 1 number" required style="padding-right: 2.5rem;" oninput="checkPassStrength(this.value)" autocomplete="new-password">
+              <button type="button" aria-label="Toggle password visibility" onclick="togglePassVisibility('signupPassword', this)" style="position: absolute; right: 0.75rem; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: var(--text-muted);">
+                <i class="fas fa-eye"></i>
+              </button>
+            </div>
+            <div class="password-strength-bar">
+              <div class="password-strength-fill" id="passStrengthFill"></div>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.3rem;">
+              <span class="field-hint" id="passStrengthLabel">Requires min. 8 chars, 1 letter and 1 number.</span>
+            </div>
+            <div class="field-error" id="signupPasswordError"></div>
+          </div>
+
+          <div class="form-group" style="margin-bottom: 1rem;">
+            <label for="signupConfirmPassword" style="font-size: 0.85rem; font-weight: 600; display: block; margin-bottom: 0.35rem;">Confirm Password *</label>
+            <div style="position: relative;">
+              <input type="password" id="signupConfirmPassword" class="form-control" placeholder="Re-type password" required style="padding-right: 2.5rem;" autocomplete="new-password">
+              <button type="button" aria-label="Toggle password visibility" onclick="togglePassVisibility('signupConfirmPassword', this)" style="position: absolute; right: 0.75rem; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: var(--text-muted);">
+                <i class="fas fa-eye"></i>
+              </button>
+            </div>
+            <div class="field-error" id="signupConfirmPasswordError"></div>
+          </div>
+
+          <div class="form-group" style="margin-bottom: 1.25rem;">
+            <label for="signupCity" style="font-size: 0.85rem; font-weight: 600; display: block; margin-bottom: 0.35rem;">City *</label>
+            <input type="text" id="signupCity" class="form-control" placeholder="e.g. Pune, Maharashtra" required>
+            <div class="field-error" id="signupCityError"></div>
+          </div>
+
+          <div style="margin-bottom: 1.25rem;">
+            <label style="display: flex; align-items: flex-start; gap: 0.5rem; font-size: 0.82rem; color: var(--text-main); cursor: pointer; line-height: 1.4;">
+              <input type="checkbox" id="signupTermsConsent" required style="accent-color: var(--accent-green); margin-top: 3px;">
+              <span>I agree to the <a href="/terms" target="_blank" style="color: var(--accent-green); font-weight: 600;">Terms of Service</a> and <a href="/privacy" target="_blank" style="color: var(--accent-green); font-weight: 600;">Privacy Policy</a>.</span>
+            </label>
+            <div class="field-error" id="signupTermsError"></div>
+          </div>
+
+          <div id="signupAlertBox" style="display: none; padding: 0.75rem 1rem; border-radius: var(--radius-sm); font-size: 0.85rem; margin-bottom: 1rem;"></div>
+
+          <button type="submit" class="btn btn-green btn-lg" id="signupSubmitBtn" style="width: 100%;">
+            <i class="fas fa-check-circle"></i> Create My Account
+          </button>
+        </form>
+
+        <div style="margin-top: 1.5rem; text-align: center; font-size: 0.85rem; color: var(--text-muted);">
+          Already have an account? <a href="#" style="color: var(--accent-green); font-weight: 600; text-decoration: none;" onclick="event.preventDefault(); switchAuthMode('signin');">Sign in here</a>
+        </div>
+      </div>
+
+      <!-- Tab 3: Reset Password View (Activated via ?action=reset-password&token=...) -->
+      <div class="auth-tab-content" id="resetPasswordPane" style="display: none;">
+        <div style="margin-bottom: 1.5rem; text-align: center;">
+          <h2 style="font-size: 1.45rem; margin: 0 0 0.35rem 0; color: var(--text-main);">Reset Your Password</h2>
+          <p style="font-size: 0.88rem; color: var(--text-muted); margin: 0;">Enter your new password below to regain account access.</p>
+        </div>
+
+        <form id="resetPasswordForm" novalidate>
+          <input type="hidden" id="resetTokenVal">
+
+          <div class="form-group" style="margin-bottom: 1rem;">
+            <label for="resetNewPassword" style="font-size: 0.85rem; font-weight: 600; display: block; margin-bottom: 0.35rem;">New Password *</label>
+            <div style="position: relative;">
+              <input type="password" id="resetNewPassword" class="form-control" placeholder="Min. 8 chars, 1 letter & 1 number" required style="padding-right: 2.5rem;" oninput="checkPassStrength(this.value, 'resetStrengthFill', 'resetStrengthLabel')" autocomplete="new-password">
+              <button type="button" aria-label="Toggle password visibility" onclick="togglePassVisibility('resetNewPassword', this)" style="position: absolute; right: 0.75rem; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: var(--text-muted);">
+                <i class="fas fa-eye"></i>
+              </button>
+            </div>
+            <div class="password-strength-bar">
+              <div class="password-strength-fill" id="resetStrengthFill"></div>
+            </div>
+            <div class="field-hint" id="resetStrengthLabel">Min. 8 chars, at least 1 letter and 1 number.</div>
+            <div class="field-error" id="resetPasswordError"></div>
+          </div>
+
+          <div class="form-group" style="margin-bottom: 1.5rem;">
+            <label for="resetConfirmPassword" style="font-size: 0.85rem; font-weight: 600; display: block; margin-bottom: 0.35rem;">Confirm New Password *</label>
+            <div style="position: relative;">
+              <input type="password" id="resetConfirmPassword" class="form-control" placeholder="Re-type new password" required style="padding-right: 2.5rem;" autocomplete="new-password">
+              <button type="button" aria-label="Toggle password visibility" onclick="togglePassVisibility('resetConfirmPassword', this)" style="position: absolute; right: 0.75rem; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: var(--text-muted);">
+                <i class="fas fa-eye"></i>
+              </button>
+            </div>
+            <div class="field-error" id="resetConfirmPasswordError"></div>
+          </div>
+
+          <div id="resetAlertBox" style="display: none; padding: 0.75rem 1rem; border-radius: var(--radius-sm); font-size: 0.85rem; margin-bottom: 1rem;"></div>
+
+          <button type="submit" class="btn btn-primary btn-lg" id="resetSubmitBtn" style="width: 100%;">
+            <i class="fas fa-key"></i> Update Password & Sign In
+          </button>
+        </form>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/api.js"></script>
+  <script src="js/store.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    function getSafeReturnTo() {
+      const params = new URLSearchParams(window.location.search);
+      const r = params.get('returnTo');
+      if (r && r.startsWith('/') && !r.startsWith('//')) {
+        return r;
+      }
+      return '/dashboard';
+    }
+
+    function switchAuthMode(mode) {
+      const signInBtn = document.getElementById('tabSignInBtn');
+      const signUpBtn = document.getElementById('tabSignUpBtn');
+      const signInPane = document.getElementById('signInPane');
+      const signUpPane = document.getElementById('signUpPane');
+      const resetPane = document.getElementById('resetPasswordPane');
+      const tabsNav = document.getElementById('authTabsNav');
+
+      tabsNav.style.display = 'flex';
+      resetPane.style.display = 'none';
+
+      if (mode === 'signup') {
+        signInBtn.classList.remove('active');
+        signUpBtn.classList.add('active');
+        signInPane.style.display = 'none';
+        signUpPane.style.display = 'block';
+      } else {
+        signUpBtn.classList.remove('active');
+        signInBtn.classList.add('active');
+        signUpPane.style.display = 'none';
+        signInPane.style.display = 'block';
+      }
+    }
+
+    function selectRole(role) {
+      document.querySelectorAll('.role-option-card').forEach(c => {
+        c.classList.toggle('selected', c.getAttribute('data-role') === role);
+      });
+      document.getElementById('signupRole').value = role;
+      document.getElementById('ngoFieldsContainer').style.display = role === 'ngo' ? 'block' : 'none';
+    }
+
+    function togglePassVisibility(inputId, btn) {
+      const input = document.getElementById(inputId);
+      if (!input) return;
+      const isPass = input.type === 'password';
+      input.type = isPass ? 'text' : 'password';
+      btn.innerHTML = isPass ? '<i class="fas fa-eye-slash"></i>' : '<i class="fas fa-eye"></i>';
+    }
+
+    function checkPassStrength(val, fillId = 'passStrengthFill', labelId = 'passStrengthLabel') {
+      const fill = document.getElementById(fillId);
+      const label = document.getElementById(labelId);
+      if (!fill || !label) return;
+
+      let score = 0;
+      if (val.length >= 8) score += 25;
+      if (/[A-Za-z]/.test(val)) score += 25;
+      if (/[0-9]/.test(val)) score += 25;
+      if (/[^A-Za-z0-9]/.test(val) || val.length >= 12) score += 25;
+
+      fill.style.width = score + '%';
+      if (score < 50) {
+        fill.style.background = '#DC2626';
+        label.textContent = 'Password strength: Weak (requires min 8 chars, 1 letter & 1 number)';
+        label.style.color = '#DC2626';
+      } else if (score < 100) {
+        fill.style.background = '#F59E0B';
+        label.textContent = 'Password strength: Medium';
+        label.style.color = '#F59E0B';
+      } else {
+        fill.style.background = '#10B981';
+        label.textContent = 'Password strength: Strong';
+        label.style.color = '#10B981';
+      }
+    }
+
+    async function triggerForgotPassword(e) {
+      e.preventDefault();
+      const email = document.getElementById('loginEmail').value.trim();
+      if (!email) {
+        alert('Please enter your email address in the Email field above to receive a reset link.');
+        document.getElementById('loginEmail').focus();
+        return;
+      }
+
+      try {
+        const res = await fetch('/api/v1/auth/forgot-password', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email })
+        });
+        const data = await res.json();
+        alert(data.message + '\n\nNote: If SMTP is not configured, check /dev-mailbox to view the generated link.');
+      } catch (err) {
+        alert('Failed to request password reset. Please check connection.');
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      const params = new URLSearchParams(window.location.search);
+      const action = params.get('action');
+      const token = params.get('token');
+      const tab = params.get('tab');
+      const role = params.get('role');
+
+      // 1. Check for Verify Email Action
+      if (action === 'verify-email' && token) {
+        try {
+          const res = await fetch(`/api/v1/auth/verify-email?token=${encodeURIComponent(token)}`);
+          const data = await res.json();
+          if (res.ok && data.success) {
+            window.showToast(data.message, 'success', 'fas fa-check-circle');
+            switchAuthMode('signin');
+            const alertBox = document.getElementById('loginAlertBox');
+            alertBox.style.display = 'block';
+            alertBox.style.background = '#ECFDF5';
+            alertBox.style.color = '#065F46';
+            alertBox.innerHTML = `<strong>Email Verified!</strong> ${data.message} Please sign in to continue.`;
+          } else {
+            window.showToast(data.message || 'Verification token invalid or expired.', 'error', 'fas fa-exclamation-circle');
+          }
+        } catch (e) {
+          window.showToast('Failed to verify email token.', 'error');
+        }
+      }
+
+      // 2. Check for Reset Password Action
+      if (action === 'reset-password' && token) {
+        document.getElementById('authTabsNav').style.display = 'none';
+        document.getElementById('signInPane').style.display = 'none';
+        document.getElementById('signUpPane').style.display = 'none';
+        document.getElementById('resetPasswordPane').style.display = 'block';
+        document.getElementById('resetTokenVal').value = token;
+      } else if (tab === 'signup') {
+        switchAuthMode('signup');
+      }
+
+      if (role && ['volunteer', 'donor', 'ngo'].includes(role)) selectRole(role);
+
+      // Sign In Form Submission
+      document.getElementById('signInForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const email = document.getElementById('loginEmail').value.trim();
+        const password = document.getElementById('loginPassword').value;
+        const rememberMe = document.getElementById('loginRememberMe').checked;
+        const alertBox = document.getElementById('loginAlertBox');
+        const submitBtn = document.getElementById('loginSubmitBtn');
+
+        alertBox.style.display = 'none';
+
+        if (!email || !password) {
+          alertBox.style.display = 'block';
+          alertBox.style.background = '#FEE2E2';
+          alertBox.style.color = '#B91C1C';
+          alertBox.textContent = 'Please enter both email address and password.';
+          return;
+        }
+
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Authenticating...';
+
+        try {
+          const res = await fetch('/api/v1/auth/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password, rememberMe })
+          });
+          const data = await res.json();
+
+          if (!res.ok || !data.success) {
+            if (data.error === 'EmailNotVerified' || data.canResend) {
+              alertBox.style.display = 'block';
+              alertBox.style.background = '#FEF3C7';
+              alertBox.style.color = '#92400E';
+              alertBox.innerHTML = `
+                <div style="display:flex; flex-direction:column; gap:0.65rem;">
+                  <div>
+                    <strong style="font-size:0.92rem;"><i class="fas fa-envelope-open-text"></i> Email verification required</strong>
+                    <p style="margin:0.25rem 0 0 0; font-size:0.83rem; line-height:1.4;">
+                      In local development, emails are routed to the <strong>Dev Mailbox</strong> instead of real Gmail inboxes.
+                    </p>
+                  </div>
+                  <div style="display:flex; flex-wrap:wrap; gap:0.5rem; align-items:center;">
+                    <button type="button" id="devQuickVerifyBtn" style="background:#059669; color:#fff; border:none; padding:0.45rem 0.85rem; border-radius:6px; cursor:pointer; font-size:0.82rem; font-weight:600; display:inline-flex; align-items:center; gap:0.35rem;">
+                      <i class="fas fa-check-circle"></i> Verify Account Now (Dev)
+                    </button>
+                    <a href="/dev-mailbox" target="_blank" style="background:#2563EB; color:#fff; text-decoration:none; padding:0.45rem 0.85rem; border-radius:6px; font-size:0.82rem; font-weight:600; display:inline-flex; align-items:center; gap:0.35rem;">
+                      <i class="fas fa-inbox"></i> Open Dev Mailbox
+                    </a>
+                    <button type="button" id="resendVerificationBtn" style="background:#fff; color:#92400E; border:1px solid #D97706; padding:0.45rem 0.85rem; border-radius:6px; cursor:pointer; font-size:0.82rem; font-weight:600; display:inline-flex; align-items:center; gap:0.35rem;">
+                      <i class="fas fa-paper-plane"></i> Resend Email
+                    </button>
+                  </div>
+                  <div id="resendStatusMsg" style="font-size:0.8rem; color:#065F46; display:none; padding:0.35rem 0.5rem; background:#ECFDF5; border-radius:4px;"></div>
+                </div>
+              `;
+
+              const quickVerifyBtn = document.getElementById('devQuickVerifyBtn');
+              if (quickVerifyBtn) {
+                quickVerifyBtn.addEventListener('click', async () => {
+                  quickVerifyBtn.disabled = true;
+                  quickVerifyBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Verifying...';
+                  try {
+                    const qRes = await fetch('/api/v1/auth/dev-quick-verify', {
+                      method: 'POST',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify({ email })
+                    });
+                    const qData = await qRes.json();
+                    if (qRes.ok && qData.success) {
+                      window.showToast('Account verified! Signing you in...', 'success');
+                      if (window.ImpactHubAPI) {
+                        window.ImpactHubAPI.setToken(qData.token, qData.user);
+                      }
+                      if (window.HCStore) {
+                        window.HCStore.setCurrentUser(qData.user);
+                      }
+                      setTimeout(() => {
+                        window.location.href = getSafeReturnTo();
+                      }, 500);
+                    } else {
+                      throw new Error(qData.message || 'Verification failed');
+                    }
+                  } catch (err) {
+                    quickVerifyBtn.disabled = false;
+                    quickVerifyBtn.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Verification Failed';
+                    alertBox.textContent = err.message;
+                  }
+                });
+              }
+
+              const resendBtn = document.getElementById('resendVerificationBtn');
+              if (resendBtn) {
+                resendBtn.addEventListener('click', async () => {
+                  resendBtn.disabled = true;
+                  resendBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+                  try {
+                    const r = await fetch('/api/v1/auth/resend-verification', {
+                      method: 'POST',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify({ email })
+                    });
+                    const d = await r.json();
+                    const statusMsg = document.getElementById('resendStatusMsg');
+                    statusMsg.style.display = 'block';
+                    statusMsg.textContent = d.message || 'Verification link sent! Check your inbox or /dev-mailbox.';
+                    resendBtn.innerHTML = '<i class="fas fa-check"></i> Dispatched';
+                  } catch (e) {
+                    resendBtn.disabled = false;
+                    resendBtn.innerHTML = '<i class="fas fa-redo"></i> Retry';
+                  }
+                });
+              }
+              return;
+            }
+            throw new Error(data.message || 'Invalid email or password.');
+          }
+
+          if (window.ImpactHubAPI) {
+            window.ImpactHubAPI.setToken(data.token, data.user);
+          }
+          if (window.HCStore) {
+            window.HCStore.setCurrentUser(data.user);
+          }
+
+          window.showToast(`Welcome back, ${data.user.name}!`, 'success');
+          setTimeout(() => {
+            window.location.href = getSafeReturnTo();
+          }, 350);
+        } catch (err) {
+          alertBox.style.display = 'block';
+          alertBox.style.background = '#FEE2E2';
+          alertBox.style.color = '#B91C1C';
+          alertBox.textContent = err.message || 'Invalid email or password.';
+        } finally {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Sign In to ImpactHub';
+        }
+      });
+
+      // Sign Up Form Submission
+      document.getElementById('signUpForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const name = document.getElementById('signupName').value.trim();
+        const email = document.getElementById('signupEmail').value.trim();
+        const password = document.getElementById('signupPassword').value;
+        const confirmPassword = document.getElementById('signupConfirmPassword').value;
+        const role = document.getElementById('signupRole').value;
+        const city = document.getElementById('signupCity').value.trim();
+        const orgName = document.getElementById('signupOrgName').value.trim();
+        const registrationNumber = document.getElementById('signupRegNo').value.trim();
+        const website = document.getElementById('signupWebsite').value.trim();
+        const cause = document.getElementById('signupCause').value;
+        const termsConsent = document.getElementById('signupTermsConsent').checked;
+
+        const alertBox = document.getElementById('signupAlertBox');
+        const submitBtn = document.getElementById('signupSubmitBtn');
+
+        alertBox.style.display = 'none';
+
+        // Validation Checks
+        if (!name) {
+          alertBox.style.display = 'block';
+          alertBox.style.background = '#FEE2E2';
+          alertBox.style.color = '#B91C1C';
+          alertBox.textContent = 'Please enter your full name.';
+          return;
+        }
+
+        if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+          alertBox.style.display = 'block';
+          alertBox.style.background = '#FEE2E2';
+          alertBox.style.color = '#B91C1C';
+          alertBox.textContent = 'Please provide a valid email address.';
+          return;
+        }
+
+        if (password.length < 8 || !/^(?=.*[A-Za-z])(?=.*\d)/.test(password)) {
+          alertBox.style.display = 'block';
+          alertBox.style.background = '#FEE2E2';
+          alertBox.style.color = '#B91C1C';
+          alertBox.textContent = 'Password must be at least 8 characters long and contain at least one letter and one number.';
+          return;
+        }
+
+        if (password !== confirmPassword) {
+          alertBox.style.display = 'block';
+          alertBox.style.background = '#FEE2E2';
+          alertBox.style.color = '#B91C1C';
+          alertBox.textContent = 'Passwords do not match.';
+          return;
+        }
+
+        if (role === 'ngo' && (!orgName || !registrationNumber)) {
+          alertBox.style.display = 'block';
+          alertBox.style.background = '#FEE2E2';
+          alertBox.style.color = '#B91C1C';
+          alertBox.textContent = 'NGO registration requires Organization Name and Society / Trust Registration Number.';
+          return;
+        }
+
+        if (!city) {
+          alertBox.style.display = 'block';
+          alertBox.style.background = '#FEE2E2';
+          alertBox.style.color = '#B91C1C';
+          alertBox.textContent = 'Please enter your city.';
+          return;
+        }
+
+        if (!termsConsent) {
+          alertBox.style.display = 'block';
+          alertBox.style.background = '#FEE2E2';
+          alertBox.style.color = '#B91C1C';
+          alertBox.textContent = 'You must agree to the Terms of Service and Privacy Policy.';
+          return;
+        }
+
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating Account...';
+
+        try {
+          const res = await fetch('/api/v1/auth/signup', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              name,
+              email,
+              password,
+              confirmPassword,
+              role,
+              city,
+              orgName,
+              registrationNumber,
+              website,
+              cause
+            })
+          });
+          const data = await res.json();
+
+          if (!res.ok || !data.success) {
+            throw new Error(data.message || (data.errors ? data.errors[0].message : 'Registration failed'));
+          }
+
+          if (window.ImpactHubAPI) {
+            window.ImpactHubAPI.setToken(data.token, data.user);
+          }
+          if (window.HCStore) {
+            window.HCStore.setCurrentUser(data.user);
+          }
+
+          window.showToast(`Account created! Welcome, ${data.user.name}.`, 'success');
+          setTimeout(() => {
+            window.location.href = getSafeReturnTo();
+          }, 350);
+        } catch (err) {
+          alertBox.style.display = 'block';
+          alertBox.style.background = '#FEE2E2';
+          alertBox.style.color = '#B91C1C';
+          alertBox.textContent = err.message;
+        } finally {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = '<i class="fas fa-check-circle"></i> Create My Account';
+        }
+      });
+
+      // Reset Password Form Submission
+      document.getElementById('resetPasswordForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const token = document.getElementById('resetTokenVal').value;
+        const newPassword = document.getElementById('resetNewPassword').value;
+        const confirmPassword = document.getElementById('resetConfirmPassword').value;
+        const alertBox = document.getElementById('resetAlertBox');
+        const submitBtn = document.getElementById('resetSubmitBtn');
+
+        alertBox.style.display = 'none';
+
+        if (newPassword.length < 8 || !/^(?=.*[A-Za-z])(?=.*\d)/.test(newPassword)) {
+          alertBox.style.display = 'block';
+          alertBox.style.background = '#FEE2E2';
+          alertBox.style.color = '#B91C1C';
+          alertBox.textContent = 'Password must be at least 8 characters long and contain at least one letter and one number.';
+          return;
+        }
+
+        if (newPassword !== confirmPassword) {
+          alertBox.style.display = 'block';
+          alertBox.style.background = '#FEE2E2';
+          alertBox.style.color = '#B91C1C';
+          alertBox.textContent = 'Passwords do not match.';
+          return;
+        }
+
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Updating Password...';
+
+        try {
+          const res = await fetch('/api/v1/auth/reset-password', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ token, password: newPassword })
+          });
+          const data = await res.json();
+
+          if (!res.ok || !data.success) {
+            throw new Error(data.message || 'Failed to reset password.');
+          }
+
+          window.showToast('Password reset successfully! Please sign in with your new password.', 'success');
+          setTimeout(() => {
+            window.location.href = '/auth?tab=signin';
+          }, 1000);
+        } catch (err) {
+          alertBox.style.display = 'block';
+          alertBox.style.background = '#FEE2E2';
+          alertBox.style.color = '#B91C1C';
+          alertBox.textContent = err.message;
+        } finally {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = '<i class="fas fa-key"></i> Update Password & Sign In';
+        }
+      });
+    });
+  </script>
+</body>
+</html>

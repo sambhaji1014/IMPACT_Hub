@@ -1,0 +1,338 @@
+// ImpactHub - Prisma Schema
+// Supports both PostgreSQL (production) and SQLite (local dev)
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                         String            @id @default(uuid())
+  name                       String
+  email                      String            @unique
+  passwordHash               String
+  role                       String            @default("volunteer") // "volunteer" | "donor" | "ngo" | "admin"
+  baseRole                   String            @default("volunteer") // "volunteer" | "donor" | "ngo" (restored on demotion)
+  roles                      String            @default("[\"volunteer\"]") // for backward-compatibility
+  avatar                     String?
+  city                       String?
+  bio                        String?
+  emailVerifiedAt            DateTime?
+  emailVerificationToken     String?
+  emailVerificationTokenHash String?
+  emailVerificationExpires   DateTime?
+  passwordResetToken         String?
+  passwordResetTokenHash     String?
+  passwordResetExpires       DateTime?
+  failedLoginAttempts        Int               @default(0)
+  lockedUntil                DateTime?
+  isSuspended                Boolean           @default(false)
+  suspensionReason           String?
+  savedCampaigns             String            @default("[]") // JSON array of campaign IDs
+  notificationPreferences    String?           @default("{\"email\":true,\"app\":true}")
+  createdAt                  DateTime          @default(now())
+  updatedAt                  DateTime          @updatedAt
+
+  // Relationships
+  ngoProfile       NgoProfile?
+  volunteerProfile VolunteerProfile?
+  donorProfile     DonorProfile?
+  refreshTokens    RefreshToken[]
+  registrations    DriveRegistration[]
+  donations        Donation[]
+  rewardEvents     RewardEvent[]
+  userBadges       UserBadge[]
+  notifications    Notification[]
+  auditLogs        AuditLog[]
+  reportsFiled     Report[]
+
+  @@index([email])
+  @@index([role])
+}
+
+model NgoProfile {
+  id                 String   @id @default(uuid())
+  userId             String   @unique
+  user               User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  orgName            String
+  registrationNumber String   @default("MH/REG/2026/001")
+  website            String?
+  description        String
+  cause              String   @default("Community Development")
+  city               String   @default("Pune")
+  logo               String?
+  banner             String?
+  verificationStatus String   @default("PENDING") // PENDING | VERIFIED | REJECTED
+  verifiedAt         DateTime?
+  rejectionReason    String?
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  campaigns Campaign[]
+  drives    Drive[]
+
+  @@index([verificationStatus])
+}
+
+model VolunteerProfile {
+  id           String   @id @default(uuid())
+  userId       String   @unique
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  skills       String?  @default("Community Outreach")
+  interests    String?  @default("Environment, Education")
+  availability String?  @default("Weekends")
+  totalHours   Float    @default(0)
+  points       Int      @default(0)
+  level        String   @default("Bronze") // Bronze | Silver | Gold | Platinum
+  optOutLeaderboard Boolean @default(false)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([points])
+  @@index([totalHours])
+}
+
+model DonorProfile {
+  id                String   @id @default(uuid())
+  userId            String   @unique
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  totalDonated      Float    @default(0)
+  points            Int      @default(0)
+  tier              String   @default("Supporter") // Supporter | Patron | Champion | Guardian
+  optOutLeaderboard Boolean  @default(false)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@index([totalDonated])
+  @@index([tier])
+}
+
+model Campaign {
+  id           String   @id @default(uuid())
+  ngoId        String
+  ngo          NgoProfile @relation(fields: [ngoId], references: [id], onDelete: Cascade)
+  title        String
+  description  String
+  category     String
+  goalAmount   Float
+  raisedAmount Float    @default(0)
+  deadline     DateTime
+  images       String   @default("[]") // JSON array of image URLs
+  status       String   @default("ACTIVE") // DRAFT | PENDING_REVIEW | ACTIVE | COMPLETED | CLOSED
+  location     String   @default("Pune, Maharashtra")
+  isDemo       Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  donations Donation[]
+
+  @@index([status])
+  @@index([category])
+  @@index([ngoId])
+}
+
+model Drive {
+  id             String   @id @default(uuid())
+  ngoId          String
+  ngo            NgoProfile @relation(fields: [ngoId], references: [id], onDelete: Cascade)
+  title          String
+  description    String
+  category       String
+  city           String
+  address        String
+  startsAt       DateTime
+  endsAt         DateTime
+  slots          Int      @default(20)
+  registeredCount Int     @default(0)
+  requiredSkills String?  @default("Open for all")
+  status         String   @default("ACTIVE") // DRAFT | ACTIVE | COMPLETED | CANCELLED
+  image          String?
+  isDemo         Boolean  @default(true)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  registrations DriveRegistration[]
+
+  @@index([status])
+  @@index([city])
+  @@index([category])
+  @@index([ngoId])
+}
+
+model DriveRegistration {
+  id             String   @id @default(uuid())
+  driveId        String
+  drive          Drive    @relation(fields: [driveId], references: [id], onDelete: Cascade)
+  volunteerId    String
+  volunteer      User     @relation(fields: [volunteerId], references: [id], onDelete: Cascade)
+  status         String   @default("CONFIRMED") // REGISTERED | CONFIRMED | ATTENDED | NO_SHOW | CANCELLED
+  hoursConfirmed Float    @default(0)
+  passCode       String   @unique
+  volunteerName  String?
+  volunteerEmail String?
+  volunteerPhone String?
+  skillsShared   String?
+  qrCodeUrl      String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@unique([driveId, volunteerId])
+  @@index([volunteerId])
+  @@index([status])
+}
+
+model Donation {
+  id               String   @id @default(uuid())
+  campaignId       String
+  campaign         Campaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  donorId          String?
+  donor            User?    @relation(fields: [donorId], references: [id], onDelete: SetNull)
+  donorName        String
+  donorEmail       String
+  donorPhone       String?
+  amount           Float
+  currency         String   @default("INR")
+  status           String   @default("SUCCEEDED") // PENDING | SUCCEEDED | FAILED | REFUNDED
+  gatewayOrderId   String?
+  gatewayPaymentId String?
+  receiptNo        String   @unique
+  anonymous        Boolean  @default(false)
+  message          String?
+  isSimulated      Boolean  @default(true)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@index([campaignId])
+  @@index([donorId])
+  @@index([status])
+}
+
+model RewardEvent {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type      String   // VOLUNTEER_HOURS | VOLUNTEER_FIRST_DRIVE | VOLUNTEER_STREAK | DONATION_POINTS | BADGE_UNLOCKED | POINTS_REVERSED
+  points    Int
+  refId     String?  // Reference ID of DriveRegistration or Donation
+  reason    String
+  isReversed Boolean @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([type])
+}
+
+model Badge {
+  id          String   @id @default(uuid())
+  slug        String   @unique
+  name        String
+  description String
+  icon        String
+  category    String   // VOLUNTEER | DONOR | SPECIAL
+  criteria    String   // Rule specification
+  createdAt   DateTime @default(now())
+
+  userBadges UserBadge[]
+}
+
+model UserBadge {
+  id         String   @id @default(uuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  badgeId    String
+  badge      Badge    @relation(fields: [badgeId], references: [id], onDelete: Cascade)
+  unlockedAt DateTime @default(now())
+
+  @@unique([userId, badgeId])
+  @@index([userId])
+}
+
+model Notification {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title     String
+  message   String
+  type      String   @default("INFO") // INFO | SUCCESS | WARNING | REWARD | DRIVE | DONATION
+  read      Boolean  @default(false)
+  link      String?
+  createdAt DateTime @default(now())
+
+  @@index([userId, read])
+}
+
+model AuditLog {
+  id        String   @id @default(uuid())
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  action    String   // LOGIN | SIGNUP | VERIFY_NGO | REJECT_NGO | DONATE | JOIN_DRIVE | MARK_ATTENDANCE | CREATE_CAMPAIGN
+  entity    String   // User | NgoProfile | Campaign | Drive | Donation | DriveRegistration
+  entityId  String?
+  details   String?  // JSON details
+  ipAddress String?
+  createdAt DateTime @default(now())
+
+  @@index([action])
+  @@index([createdAt])
+}
+
+model RefreshToken {
+  id        String    @id @default(uuid())
+  tokenHash String    @unique
+  token     String?   // optional legacy token
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userAgent String?
+  ipAddress String?
+  expiresAt DateTime
+  revokedAt DateTime?
+  revoked   Boolean   @default(false)
+  createdAt DateTime  @default(now())
+
+  @@index([tokenHash])
+  @@index([userId])
+}
+
+model Report {
+  id          String   @id @default(uuid())
+  reporterId  String
+  reporter    User     @relation(fields: [reporterId], references: [id], onDelete: Cascade)
+  entityType  String   // CAMPAIGN | DRIVE | NGO
+  entityId    String
+  reason      String
+  status      String   @default("PENDING") // PENDING | REVIEWED | DISMISSED | ACTIONED
+  actionTaken String?
+  createdAt   DateTime @default(now())
+
+  @@index([status])
+}
+
+model ContactMessage {
+  id        String   @id @default(uuid())
+  ticketId  String   @unique
+  name      String
+  email     String
+  subject   String?  @default("General Inquiry")
+  message   String
+  status    String   @default("OPEN") // OPEN | RESOLVED
+  createdAt DateTime @default(now())
+
+  @@index([ticketId])
+}
+
+model DispatchedEmail {
+  id        String   @id @default(uuid())
+  to        String
+  subject   String
+  html      String
+  text      String?
+  sentAt    DateTime @default(now())
+
+  @@index([to])
+  @@index([sentAt])
+}
+
